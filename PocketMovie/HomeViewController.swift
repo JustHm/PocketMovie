@@ -11,9 +11,26 @@ import SwiftUI
 class HomeViewController: UICollectionViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "PocketMovie"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationController?.navigationBar.backgroundColor = .clear
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.hidesBarsOnSwipe = true
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "netflix_icon"), style: .plain, target: nil, action: nil) //임시 아이콘
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "folder"), style: .plain, target: nil, action: nil)
+        
+        // MARK: PARSING TEST
+        do {
+            let fileLocation = Bundle.main.url(forResource: "temp", withExtension: "json")!
+            let data = try Data(contentsOf: fileLocation)
+            let result = try JSONDecoder().decode(BoxOffice.self, from: data)
+            print(result)
+        } catch {
+            print("ERROR \(error.localizedDescription)")
+        }
+        // MARK: END
     }
+    
 }
 
 

@@ -1,0 +1,29 @@
+{
+    "boxOfficeResult": {
+        "boxofficeType": "주말 박스오피스",
+        "showRange": "20221118~20221120",
+        "yearWeekTime": "202246",
+        "weeklyBoxOfficeList": [
+            {
+                "rnum": "1",
+                "rank": "1",
+                "rankInten": "0",
+                "rankOldAndNew": "OLD",
+                "movieCd": "20226254",
+                "movieNm": "블랙 팬서: 와칸다 포에버",
+                "openDt": "2022-11-09",
+                "salesAmt": "4026586330",
+                "salesShare": "37.7",
+                "salesInten": "-4537051472",
+                "salesChange": "-53.0",
+                "salesAcc": "18438207553",
+                "audiCnt": "374644",
+                "audiInten": "-418806",
+                "audiChange": "-52.8",
+                "audiAcc": "1731080",
+                "scrnCnt": "1456",
+                "showCnt": "14863"
+            }
+        ]
+    }
+}

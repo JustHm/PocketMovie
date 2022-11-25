@@ -15,6 +15,9 @@
 		22502B6D292FCC3200660F91 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 22502B6C292FCC3200660F91 /* SnapKit */; };
 		22502B70292FCC4100660F91 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22502B6F292FCC4100660F91 /* Kingfisher */; };
 		22502B72292FCCAF00660F91 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B71292FCCAF00660F91 /* HomeViewController.swift */; };
+		22502B742930D98200660F91 /* BoxOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B732930D98200660F91 /* BoxOffice.swift */; };
+		22502B772930F02B00660F91 /* NaverMovieSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B762930F02B00660F91 /* NaverMovieSearch.swift */; };
+		22502B7A2931062300660F91 /* temp.json in Resources */ = {isa = PBXBuildFile; fileRef = 22502B792931062300660F91 /* temp.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +28,9 @@
 		22502B60292FCBB100660F91 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		22502B62292FCBB100660F91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22502B71292FCCAF00660F91 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		22502B732930D98200660F91 /* BoxOffice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOffice.swift; sourceTree = "<group>"; };
+		22502B762930F02B00660F91 /* NaverMovieSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverMovieSearch.swift; sourceTree = "<group>"; };
+		22502B792931062300660F91 /* temp.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = temp.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,14 +66,25 @@
 		22502B53292FCBB000660F91 /* PocketMovie */ = {
 			isa = PBXGroup;
 			children = (
+				22502B752930EB7000660F91 /* Model */,
 				22502B54292FCBB000660F91 /* AppDelegate.swift */,
 				22502B56292FCBB000660F91 /* SceneDelegate.swift */,
 				22502B71292FCCAF00660F91 /* HomeViewController.swift */,
+				22502B792931062300660F91 /* temp.json */,
 				22502B5D292FCBB100660F91 /* Assets.xcassets */,
 				22502B5F292FCBB100660F91 /* LaunchScreen.storyboard */,
 				22502B62292FCBB100660F91 /* Info.plist */,
 			);
 			path = PocketMovie;
+			sourceTree = "<group>";
+		};
+		22502B752930EB7000660F91 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				22502B732930D98200660F91 /* BoxOffice.swift */,
+				22502B762930F02B00660F91 /* NaverMovieSearch.swift */,
+			);
+			path = Model;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,6 +157,7 @@
 			files = (
 				22502B61292FCBB100660F91 /* LaunchScreen.storyboard in Resources */,
 				22502B5E292FCBB100660F91 /* Assets.xcassets in Resources */,
+				22502B7A2931062300660F91 /* temp.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -151,8 +169,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				22502B55292FCBB000660F91 /* AppDelegate.swift in Sources */,
+				22502B772930F02B00660F91 /* NaverMovieSearch.swift in Sources */,
 				22502B57292FCBB000660F91 /* SceneDelegate.swift in Sources */,
 				22502B72292FCCAF00660F91 /* HomeViewController.swift in Sources */,
+				22502B742930D98200660F91 /* BoxOffice.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
