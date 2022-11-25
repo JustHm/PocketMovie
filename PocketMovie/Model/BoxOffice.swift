@@ -6,7 +6,7 @@
 //
 
 import Foundation
-// 영화 진흥원 response는 다 string...
+// Weekly, Daily BoxOffice Model
 
 // MARK: - BoxOffice
 struct BoxOffice: Decodable {
@@ -16,8 +16,9 @@ struct BoxOffice: Decodable {
 // MARK: - BoxOfficeResult
 struct BoxOfficeResult: Decodable {
     let boxofficeType, showRange: String
-    let yearWeekTime: String // Weekly에는 있지만 Daily에는 없음
-    let weeklyBoxOfficeList: [MoviewInfo]
+    let yearWeekTime: String?
+    let weeklyBoxOfficeList: [MoviewInfo]?
+    let dailyBoxOfficeList: [MoviewInfo]?
 }
 
 struct MoviewInfo: Decodable {
@@ -27,7 +28,6 @@ struct MoviewInfo: Decodable {
     let movieNm: String
     let openDt: String
     let audiCnt: String
-    
-    //let rnum, rankInten, salesAmt, salesShare, salesInten, salesChange, salesAcc, audiInten, audiChange, audiAcc, scrnCnt, showCnt: String
+
 }
 

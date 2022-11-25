@@ -8,6 +8,7 @@
 import Foundation
 
 struct NaverMovieSearch: Decodable {
+    let total, start, display: Int
     let items: [NaverMovie]
 }
 

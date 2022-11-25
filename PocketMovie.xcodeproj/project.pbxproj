@@ -18,6 +18,8 @@
 		22502B742930D98200660F91 /* BoxOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B732930D98200660F91 /* BoxOffice.swift */; };
 		22502B772930F02B00660F91 /* NaverMovieSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B762930F02B00660F91 /* NaverMovieSearch.swift */; };
 		22502B7A2931062300660F91 /* temp.json in Resources */ = {isa = PBXBuildFile; fileRef = 22502B792931062300660F91 /* temp.json */; };
+		22502B7D2931193500660F91 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B7C2931193500660F91 /* APIService.swift */; };
+		22502B7F2931199D00660F91 /* APIInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B7E2931199D00660F91 /* APIInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +33,8 @@
 		22502B732930D98200660F91 /* BoxOffice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOffice.swift; sourceTree = "<group>"; };
 		22502B762930F02B00660F91 /* NaverMovieSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverMovieSearch.swift; sourceTree = "<group>"; };
 		22502B792931062300660F91 /* temp.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = temp.json; sourceTree = "<group>"; };
+		22502B7C2931193500660F91 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
+		22502B7E2931199D00660F91 /* APIInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +70,7 @@
 		22502B53292FCBB000660F91 /* PocketMovie */ = {
 			isa = PBXGroup;
 			children = (
+				22502B7B2931192700660F91 /* Service */,
 				22502B752930EB7000660F91 /* Model */,
 				22502B54292FCBB000660F91 /* AppDelegate.swift */,
 				22502B56292FCBB000660F91 /* SceneDelegate.swift */,
@@ -85,6 +90,15 @@
 				22502B762930F02B00660F91 /* NaverMovieSearch.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		22502B7B2931192700660F91 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				22502B7C2931193500660F91 /* APIService.swift */,
+				22502B7E2931199D00660F91 /* APIInfo.swift */,
+			);
+			path = Service;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -172,7 +186,9 @@
 				22502B772930F02B00660F91 /* NaverMovieSearch.swift in Sources */,
 				22502B57292FCBB000660F91 /* SceneDelegate.swift in Sources */,
 				22502B72292FCCAF00660F91 /* HomeViewController.swift in Sources */,
+				22502B7D2931193500660F91 /* APIService.swift in Sources */,
 				22502B742930D98200660F91 /* BoxOffice.swift in Sources */,
+				22502B7F2931199D00660F91 /* APIInfo.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
