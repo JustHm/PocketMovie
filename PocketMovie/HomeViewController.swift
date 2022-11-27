@@ -9,6 +9,8 @@ import UIKit
 import SwiftUI
 
 class HomeViewController: UICollectionViewController {
+    var dailyList: [BoxOffice] = []
+    var weeklyList: [BoxOffice] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationController?.navigationBar.backgroundColor = .clear
@@ -29,6 +31,12 @@ class HomeViewController: UICollectionViewController {
             print("ERROR \(error.localizedDescription)")
         }
         // MARK: END
+        APIService.shared.boxOfficeResponse(range: .daily, completion: { response in
+            
+        })
+        APIService.shared.boxOfficeResponse(range: .weekly, completion: { response in
+            
+        })
     }
     
 }

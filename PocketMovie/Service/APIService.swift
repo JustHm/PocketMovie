@@ -31,7 +31,21 @@ class APIService {
         // MARK: Request Part
         AF.request(url, method: .get, parameters: param)
             .responseData(completionHandler: { response in
-                
+                switch response.result {
+                case let .success(data):
+                    do {
+                        let decode = JSONDecoder()
+                        let result = try decode.decode(BoxOffice.self, from: data)
+                        completion(result)
+                    } catch {
+                        print("Decode ERROR: \(error.localizedDescription)")
+                    }
+                    break
+                case let .failure(error):
+                    print("ERROR CODE: \(String(describing: error.responseCode))")
+                    print("\(error.localizedDescription)")
+                    break
+                }
             })
     }
 }
