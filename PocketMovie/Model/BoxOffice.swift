@@ -10,24 +10,24 @@ import Foundation
 
 // MARK: - BoxOffice
 struct BoxOffice: Decodable {
-    let boxOfficeResult: BoxOfficeResult
+    var boxOfficeResult: BoxOfficeResult
 }
 
 // MARK: - BoxOfficeResult
 struct BoxOfficeResult: Decodable {
     let boxofficeType, showRange: String
     let yearWeekTime: String?
-    let weeklyBoxOfficeList: [MoviewInfo]?
-    let dailyBoxOfficeList: [MoviewInfo]?
+    var weeklyBoxOfficeList: [MovieInfo]?
+    var dailyBoxOfficeList: [MovieInfo]?
 }
 
-struct MoviewInfo: Decodable {
+struct MovieInfo: Decodable {
     let rank: String
     let rankOldAndNew: String
     let movieCd: String
     let movieNm: String
     let openDt: String
     let audiCnt: String
-
+    var posterImage: [String]? //외부 api 사용해서 가져올거야
 }
 
