@@ -9,8 +9,8 @@ import UIKit
 import SwiftUI
 
 class MainViewController: UIViewController {
-    var subVC = UIViewController()
-    let searchBar = UISearchBar()
+    var subVC: UIViewController!
+    var searchController: UISearchController!
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,9 +20,14 @@ class MainViewController: UIViewController {
 //        navigationController?.hidesBarsOnSwipe = true
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "netflix_icon"), style: .plain, target: nil, action: nil) //임시 아이콘
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "folder"), style: .plain, target: nil, action: nil)
-        
-        let searchController = UISearchController(searchResultsController: nil)
+
+        let layout = UICollectionViewFlowLayout()
+        let vc = MovieSearchViewController(collectionViewLayout: layout)
+        searchController = UISearchController(searchResultsController: vc)
         searchController.searchBar.placeholder = "Search Movie"
+        searchController.obscuresBackgroundDuringPresentation = true
+        searchController.searchBar.delegate = vc.self
+//        searchController.searchResultsUpdater = vc.self
         self.navigationItem.searchController = searchController
         
         initSubView()

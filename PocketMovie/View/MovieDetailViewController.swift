@@ -11,10 +11,13 @@ import SwiftUI
 class MovieDetailViewController: UIViewController {
     let posterImage = UIImageView()
     let titleLabel = UILabel()
-    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        print("BYEEEE")
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        print("Running")
         
         view.backgroundColor = .gray
         

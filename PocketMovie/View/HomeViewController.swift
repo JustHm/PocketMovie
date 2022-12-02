@@ -146,7 +146,6 @@ extension HomeViewController {
         vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
         
         navigationController?.pushViewController(vc, animated: true)
-        
     }
 }
 
