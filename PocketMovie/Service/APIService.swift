@@ -74,7 +74,7 @@ class APIService {
                 switch response.result {
                 case let .success(data):
                     do {
-                        //print(String(decoding: data, as: UTF8.self))
+                        
                         let decode = JSONDecoder()
                         let temp = try decode.decode(MovieDetail.self, from: data)
                         let result = temp.data[0].result[0].posters

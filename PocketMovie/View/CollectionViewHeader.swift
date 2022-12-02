@@ -12,12 +12,12 @@ class CollectionViewHeader: UICollectionReusableView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        headerLabel.font = .systemFont(ofSize: 24, weight: .bold)
+        headerLabel.font = .systemFont(ofSize: 18, weight: .bold)
         headerLabel.sizeToFit()
         addSubview(headerLabel)
         
         headerLabel.snp.makeConstraints {
-            $0.left.equalToSuperview().offset(10)
+            $0.left.equalToSuperview().offset(0)
         }
     }
 }

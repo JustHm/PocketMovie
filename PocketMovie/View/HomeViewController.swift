@@ -13,12 +13,6 @@ class HomeViewController: UICollectionViewController {
     var weeklyList: [MovieInfo] = []
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationController?.navigationBar.backgroundColor = .clear
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-//        navigationController?.hidesBarsOnSwipe = true
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "netflix_icon"), style: .plain, target: nil, action: nil) //임시 아이콘
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "folder"), style: .plain, target: nil, action: nil)
         
         getRankData()
         
@@ -63,7 +57,7 @@ extension HomeViewController {
     
     private func boxOfficeSection() -> NSCollectionLayoutSection {
         // layout
-        let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalHeight(0.9))
+        let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalHeight(0.8))
         let item = NSCollectionLayoutItem(layoutSize: layoutSize)
         item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5)
         // group
@@ -73,7 +67,7 @@ extension HomeViewController {
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 0, trailing: 5)
+        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 15, trailing: 5)
         
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
@@ -133,6 +127,26 @@ extension HomeViewController {
         } else {
             return UICollectionReusableView()
         }
+    }
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        var selectedMovie: MovieInfo?
+        
+        switch indexPath.section {
+        case 0:
+            selectedMovie = dailyList[indexPath.row]
+        case 1:
+            selectedMovie = weeklyList[indexPath.row]
+        default:
+            return
+        }
+        print(selectedMovie?.movieNm)
+        guard let poster = selectedMovie?.posterImage?[0] else { return }
+        let vc = MovieDetailViewController()
+        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
+        
+        navigationController?.pushViewController(vc, animated: true)
+        
     }
 }
 
