@@ -39,7 +39,7 @@ class MovieSearchViewController: UICollectionViewController {
         
         let data = searchResult[indexPath.row]
         let poster = data.posters.components(separatedBy: "|")[0]
-        cell.configure(imageURL: poster, title: data.title)
+        cell.configureCell(imageURL: poster, title: data.title)
         
         return cell
     }
@@ -47,9 +47,7 @@ class MovieSearchViewController: UICollectionViewController {
         let selected = searchResult[indexPath.row]
         
         let vc = MovieDetailViewController()
-        let poster = selected.posters.components(separatedBy: "|")[0]
-
-        vc.configure(imageURL: poster, title: selected.title)
+        vc.configureUI(data: selected)
         self.navigationController?.present(vc, animated: true)
     }
 }

@@ -169,21 +169,20 @@ extension HomeViewController {
     }
     override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        var selectedMovie: MovieInfo?
+        var selectedMovie = ""
         
         switch indexPath.section {
         case 0:
-            selectedMovie = dailyList[indexPath.row]
+            selectedMovie = dailyList[indexPath.row].movieNm
         case 1:
-            selectedMovie = weeklyList[indexPath.row]
+            selectedMovie = weeklyList[indexPath.row].movieNm
         default:
             return
         }
         
-        let poster = getPosterImage(title: selectedMovie?.movieNm ?? "")
-        
         let vc = MovieDetailViewController()
-        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
+        vc.configureUI(data: boxOfficeInfo[selectedMovie]!)
+//        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
         
         navigationController?.present(vc, animated: true)
     }

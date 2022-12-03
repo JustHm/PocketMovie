@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Kingfisher
 
 class MovieCell: UICollectionViewCell {
     let imageView = UIImageView()
@@ -30,7 +29,7 @@ class MovieCell: UICollectionViewCell {
         }
     }
     
-    func configure(imageURL: String, title: String) {
+    func configureCell(imageURL: String, title: String) {
         let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
         imageView.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"))
         titleLabel.text = title
