@@ -17,11 +17,20 @@ enum KmdbType: String {
 class APIService {
     // MARK: Property
     static let shared = APIService()
+    private var dateFormatter: DateFormatter {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYYMMdd"
+        return dateFormatter
+    }
     private var dailyDate: String { // 어제 날짜로 설정해야함
-        return ""
+        let date = Date()
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: date) else { return "20221125" }
+        return dateFormatter.string(from: yesterday)
     }
     private var weeklyDate: String { // 저번주 날짜로 설정해야함.
-        return ""
+        let date = Date()
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -6, to: date) else { return "20221125" }
+        return dateFormatter.string(from: yesterday)
     }
     
     // MARK: Method
@@ -32,9 +41,9 @@ class APIService {
         var param: Parameters = ["key": getAPIKey(hostName: .kobis)]
         switch range {
         case .daily:
-            param["targetDt"] = "20221125"
+            param["targetDt"] = dailyDate
         case .weekly:
-            param["targetDt"] = "20221125"
+            param["targetDt"] = weeklyDate
             param["weekGb"] = 0
         }
         
@@ -83,7 +92,6 @@ class APIService {
                 switch response.result {
                 case let .success(data):
                     do {
-                        
                         let decode = JSONDecoder()
                         let temp = try decode.decode(MovieDetail.self, from: data)
                         if let result = temp.data[0].result {
@@ -91,7 +99,6 @@ class APIService {
                         } else {
                             completion([])
                         }
-                        
                     } catch {
                         print("GETIMAGE Decode ERROR: \(error.localizedDescription)")
                     }
@@ -103,23 +110,6 @@ class APIService {
                 }
             })
     }
-    //    func kmdbResponse(type: KmdbType, completion: @escaping () -> Void) {
-    //        let url = APIInfo.movieDetailHost
-    //
-    //        // MARK: Parameter Settings
-    //        var param: Parameters = [
-    //            "ServiceKey": getAPIKey(hostName: .kmdb),
-    //            "collection": "kmdb_new2"
-    //            "detail": "Y"
-    //        ]
-    //        switch type {
-    //        case .search:
-    //            param["targetDt"] = "20201125"
-    //        case .getImage:
-    //
-    //        }
-    //    }
-    
 }
 
 extension APIService {

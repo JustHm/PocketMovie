@@ -36,36 +36,35 @@ class MovieDetailViewController: UIViewController {
         [stillCollection.collectionView, titleLabel, subInfo, discriptionLabel].forEach {
             view.addSubview($0)
         }
+        [titleLabel, subInfo, discriptionLabel].forEach {
+            $0.numberOfLines = 0
+            $0.sizeToFit()
+        }
         
         stillCollection.collectionView.snp.makeConstraints {
             $0.top.left.right.equalToSuperview()
             $0.height.equalTo(250)
         }
-//        titleLabel.text = "DFSSSDF"
-        titleLabel.numberOfLines = 0
+
         titleLabel.shadowColor = .gray
         titleLabel.shadowOffset = CGSize(width: 2, height: 2)
-        titleLabel.font = .systemFont(ofSize: 18, weight: .black)
-        titleLabel.sizeToFit()
+        titleLabel.font = .systemFont(ofSize: 24, weight: .black)
         titleLabel.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(12)
             $0.top.equalTo(stillCollection.collectionView.snp.bottom).offset(12)
         }
         
         
-        subInfo.font = .systemFont(ofSize: 12, weight: .bold)
+        
         subInfo.shadowColor = .gray
         subInfo.shadowOffset = CGSize(width: 1, height: 1)
-        subInfo.numberOfLines = 0
-        subInfo.sizeToFit()
+        subInfo.font = .systemFont(ofSize: 12, weight: .bold)
         subInfo.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(12)
             $0.top.equalTo(titleLabel.snp.bottom).offset(10)
         }
         
-        discriptionLabel.numberOfLines = 0
         discriptionLabel.font = .systemFont(ofSize: 14, weight: .light)
-        discriptionLabel.sizeToFit()
         discriptionLabel.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(12)
             $0.top.equalTo(subInfo.snp.bottom).offset(12)
