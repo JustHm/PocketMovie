@@ -9,12 +9,11 @@ import UIKit
 import SwiftUI
 
 class MovieDetailViewController: UIViewController {
-    let stilImage = UIImageView()
     let titleLabel = UILabel()
     let subInfo = UILabel()
     let discriptionLabel = UILabel()
-    var stillCollection: UICollectionViewController!
     
+    var stillCollection: UICollectionViewController!
     var posters: [String] = []
     
     override func viewDidLoad() {
@@ -70,11 +69,7 @@ class MovieDetailViewController: UIViewController {
             $0.top.equalTo(subInfo.snp.bottom).offset(12)
         }
     }
-    func configure(imageURL: String, title: String) {
-        let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
-        stilImage.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"))
-        titleLabel.text = title
-    }
+    
     func configureUI(data: Movie?) {
         guard let data = data else { return }
         titleLabel.text = data.movieNm

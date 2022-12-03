@@ -31,7 +31,13 @@ class MovieCell: UICollectionViewCell {
     
     func configureCell(imageURL: String, title: String) {
         let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
-        imageView.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"))
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"),options: [
+            .transition(.fade(1.2)),
+            .forceTransition,
+            .scaleFactor(UIScreen.main.scale),
+            .cacheOriginalImage
+        ])
         titleLabel.text = title
     }
 }

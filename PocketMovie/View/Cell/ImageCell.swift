@@ -23,9 +23,13 @@ class ImageCell: UICollectionViewCell {
     
     func configureCell(imageURL: String) {
         let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
-        imageView.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"), completionHandler: { result in
-            
-        })
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: url, placeholder: nil, options: [
+            .transition(.fade(1.2)),
+            .forceTransition,
+            .scaleFactor(UIScreen.main.scale),
+            .cacheOriginalImage
+        ])
         
     }
 }

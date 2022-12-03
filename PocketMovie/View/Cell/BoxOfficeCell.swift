@@ -39,7 +39,11 @@ class BoxOfficeCell: UICollectionViewCell {
     
     func configureCell(imageURL: String, rank: String) {
         let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
-        imageView.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"))
+        imageView.kf.indicatorType = .activity
+        imageView.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"),options: [
+            .scaleFactor(UIScreen.main.scale),
+            .cacheOriginalImage
+        ])
         rankLabel.text = rank
     }
 }
