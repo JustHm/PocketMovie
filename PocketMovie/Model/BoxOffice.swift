@@ -28,6 +28,5 @@ struct MovieInfo: Decodable {
     let movieNm: String
     let openDt: String
     let audiCnt: String
-    var posterImage: [String]? //외부 api 사용해서 가져올거야
 }
 

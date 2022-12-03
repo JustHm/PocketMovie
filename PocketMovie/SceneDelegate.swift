@@ -17,9 +17,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         self.window = UIWindow(windowScene: windowScene)
         
-//        let layout = UICollectionViewFlowLayout()
-//        let rootVC = HomeViewController(collectionViewLayout: layout)
-        let rootVC = MainViewController()
+        let layout = UICollectionViewFlowLayout()
+        let rootVC = HomeViewController(collectionViewLayout: layout)
+//        let rootVC = MainViewController()
         let rootNavi = UINavigationController(rootViewController: rootVC)
         
         self.window?.rootViewController = rootNavi

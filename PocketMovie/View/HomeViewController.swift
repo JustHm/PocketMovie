@@ -11,8 +11,29 @@ import SwiftUI
 class HomeViewController: UICollectionViewController {
     var dailyList: [MovieInfo] = []
     var weeklyList: [MovieInfo] = []
+    var boxOfficeInfo: [String: Movie] = [:]
+    
+    var searchController: UISearchController!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        navigationController?.navigationBar.backgroundColor = .clear
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+        navigationController?.navigationBar.shadowImage = UIImage()
+        //        navigationController?.hidesBarsOnSwipe = true
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "netflix_icon"), style: .plain, target: nil, action: nil) //임시 아이콘
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "folder"), style: .plain, target: nil, action: nil)
+        
+        let temp = UICollectionViewFlowLayout()
+        let vc = MovieSearchViewController(collectionViewLayout: temp)
+        let nav = UINavigationController(rootViewController: vc)
+        searchController = UISearchController(searchResultsController: nav)
+        searchController.searchBar.placeholder = "Search Movie"
+        searchController.obscuresBackgroundDuringPresentation = true
+        searchController.searchBar.delegate = vc.self
+        self.navigationItem.searchController = searchController
+        
         
         getRankData()
         
@@ -25,28 +46,40 @@ class HomeViewController: UICollectionViewController {
         APIService.shared.boxOfficeResponse(range: .daily, completion: { [weak self] response in
             guard let data = response.boxOfficeResult.dailyBoxOfficeList else {return}
             self?.dailyList = data
-            self?.getMovieImage()
+            self?.getMovieInfo()
         })
         APIService.shared.boxOfficeResponse(range: .weekly, completion: {[weak self] response in
             guard let data = response.boxOfficeResult.weeklyBoxOfficeList else {return}
             self?.weeklyList = data
-            self?.getMovieImage()
+            self?.getMovieInfo()
         })
     }
     
-    private func getMovieImage() {
-        for (index, value) in dailyList.enumerated() {
-            APIService.shared.getPosterImage(title: value.movieNm, releaseDate: value.openDt, completion: { [weak self] response in
-                self?.dailyList[index].posterImage = response.components(separatedBy: "|")
-                self?.collectionView.reloadData()
-            })
+    private func getMovieInfo() {
+        for (_, value) in dailyList.enumerated() {
+            requsetMovieInfo(value: value)
         }
-        for (index, value) in weeklyList.enumerated() {
-            APIService.shared.getPosterImage(title: value.movieNm, releaseDate: value.openDt, completion: { [weak self] response in
-                self?.weeklyList[index].posterImage = response.components(separatedBy: "|")
-                self?.collectionView.reloadData()
-            })
+        for (_, value) in weeklyList.enumerated() {
+            requsetMovieInfo(value: value)
         }
+    }
+    private func requsetMovieInfo(value: MovieInfo) {
+        guard boxOfficeInfo[value.movieNm] != nil else {
+            APIService.shared.searchMovie(title: value.movieNm, releaseDate: value.openDt, completion: { [weak self] response in
+                if !response.isEmpty {
+                    self?.boxOfficeInfo[value.movieNm] = response[0]
+                    self?.collectionView.reloadData()
+                }
+            })
+            return
+        }
+    }
+    private func getPosterImage(title: String) -> String {
+        guard let temp = boxOfficeInfo[title] else {
+            return ""
+        }
+        let posters = temp.posters.components(separatedBy: "|")
+        return posters[0]
     }
 }
 
@@ -63,7 +96,7 @@ extension HomeViewController {
         // group
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
-//        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
+        //        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
@@ -82,7 +115,10 @@ extension HomeViewController {
         
         return sectionHeader
     }
-    
+
+}
+// MARK: UICollectionViewDataSource
+extension HomeViewController {
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 2
     }
@@ -101,17 +137,20 @@ extension HomeViewController {
         switch indexPath.section {
         case 0:
             let data = dailyList[indexPath.row]
-            cell.configureCell(imageURL: data.posterImage?[0] ?? "", rank: data.rank)
+            let poster = getPosterImage(title: data.movieNm)
+            cell.configureCell(imageURL: poster, rank: data.rank)
             return cell
         case 1:
             let data = weeklyList[indexPath.row]
-            cell.configureCell(imageURL: data.posterImage?[0] ?? "", rank: data.rank)
+            let poster = getPosterImage(title: data.movieNm)
+            cell.configureCell(imageURL: poster, rank: data.rank)
             return cell
         default:
             break
         }
         return UICollectionViewCell()
     }
+    
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         if kind == UICollectionView.elementKindSectionHeader {
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CollectionViewHeader", for: indexPath) as? CollectionViewHeader else { return UICollectionReusableView() }
@@ -140,12 +179,13 @@ extension HomeViewController {
         default:
             return
         }
-        print(selectedMovie?.movieNm)
-        guard let poster = selectedMovie?.posterImage?[0] else { return }
+        
+        let poster = getPosterImage(title: selectedMovie?.movieNm ?? "")
+        
         let vc = MovieDetailViewController()
         vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
         
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.present(vc, animated: true)
     }
 }
 

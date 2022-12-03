@@ -10,9 +10,9 @@ import UIKit
 class MovieSearchViewController: UICollectionViewController {
     var searchResult: [Movie] = []
     let discriptionLabel = UILabel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.addSubview(discriptionLabel)
         discriptionLabel.text = "검색결과 없음"
         discriptionLabel.sizeToFit()
@@ -20,13 +20,13 @@ class MovieSearchViewController: UICollectionViewController {
         discriptionLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
-        
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: "MovieCell")
     }
-    override func viewDidDisappear(_ animated: Bool) {
-        self.searchResult = []
-        self.collectionView.reloadData()
-    }
+//    override func viewDidDisappear(_ animated: Bool) {
+//        super.viewDidDisappear(animated)
+//        self.searchResult = []
+//        self.collectionView.reloadData()
+//    }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -50,15 +50,14 @@ class MovieSearchViewController: UICollectionViewController {
         let poster = selected.posters.components(separatedBy: "|")[0]
 
         vc.configure(imageURL: poster, title: selected.title)
-
-        self.navigationController?.pushViewController(vc, animated: true)
+        self.navigationController?.present(vc, animated: true)
     }
 }
 
 extension MovieSearchViewController: UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
-        APIService.shared.searchMovie(title: text, completion: { [weak self] response in
+        APIService.shared.searchMovie(title: text, releaseDate: nil, completion: { [weak self] response in
             if response.isEmpty {
                 self?.discriptionLabel.isHidden = false
                 self?.searchResult = []
@@ -72,11 +71,11 @@ extension MovieSearchViewController: UISearchBarDelegate {
     }
 }
 
-//extension MovieSearchViewController: UISearchResultsUpdating {
-//    func updateSearchResults(for searchController: UISearchController) {
-//        if searchController.searchBar.text == "" {
-//            self.searchResult = []
-//            self.collectionView.reloadData()
-//        }
-//    }
-//}
+extension MovieSearchViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        if searchController.searchBar.text == "" {
+            self.searchResult = []
+            self.collectionView.reloadData()
+        }
+    }
+}

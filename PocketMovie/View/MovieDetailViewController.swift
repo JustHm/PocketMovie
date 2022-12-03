@@ -9,37 +9,47 @@ import UIKit
 import SwiftUI
 
 class MovieDetailViewController: UIViewController {
-    let posterImage = UIImageView()
+    let stilImage = UIImageView()
     let titleLabel = UILabel()
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        print("BYEEEE")
-    }
+    let discriptionLabel = UILabel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        print("Running")
         
-        view.backgroundColor = .gray
+     
+//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left.circle.fill"), style: .plain, target: nil, action: nil)
+
+        view.backgroundColor = .black
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
         
-        [posterImage, titleLabel].forEach {
+        [stilImage, titleLabel, discriptionLabel].forEach {
             view.addSubview($0)
         }
-        posterImage.contentMode = .scaleAspectFit
-        posterImage.snp.makeConstraints {
-            $0.centerX.centerY.equalToSuperview()
+        stilImage.contentMode = .scaleAspectFit
+        stilImage.snp.makeConstraints {
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
         }
 //        titleLabel.text = "DFSSSDF"
         titleLabel.sizeToFit()
-        titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
-        
+        titleLabel.font = .systemFont(ofSize: 18, weight: .black)
         titleLabel.snp.makeConstraints {
-            $0.centerX.equalTo(posterImage)
-            $0.top.equalTo(posterImage.snp.bottom).offset(12)
+            $0.left.equalToSuperview().offset(12)
+            $0.top.equalTo(stilImage.snp.bottom).offset(12)
+        }
+        
+        
+        discriptionLabel.sizeToFit()
+        discriptionLabel.font = .systemFont(ofSize: 18, weight: .black)
+        discriptionLabel.snp.makeConstraints {
+            $0.left.equalToSuperview().offset(12)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(12)
         }
     }
     func configure(imageURL: String, title: String) {
         let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
-        posterImage.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"))
+        stilImage.kf.setImage(with: url, placeholder: UIImage(systemName: "trash"))
         titleLabel.text = title
     }
     

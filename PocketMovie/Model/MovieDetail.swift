@@ -28,6 +28,12 @@ struct Movies: Codable {
 // MARK: - Movie
 struct Movie: Codable {
     let docid, movieID, movieSeq, title: String
+    var movieNm: String { //KMDB title에 !HS !HE 가 있는 경우 앞뒤로 공백까지 없애줘야 하고, 맨 앞 문자열에 공백이 삽입되어 온다.
+        var temp = title.replacingOccurrences(of: " !HS ", with: "")
+        temp = temp.replacingOccurrences(of: " !HE ", with: "")
+        temp.removeFirst()
+        return temp
+    }
     let titleEng, titleOrg, titleEtc, prodYear: String
     let directors: Directors
     let actors: Actors

@@ -58,14 +58,24 @@ class APIService {
                 }
             })
     }
-    func searchMovie(title: String, completion: @escaping ([Movie]) -> Void) {
+        
+    func searchMovie(title: String, releaseDate: String?, completion: @escaping ([Movie]) -> Void) {
         let url = APIInfo.movieDetailHost
+        var date: String {
+            if let temp = releaseDate {
+                return temp.replacingOccurrences(of: "-", with: "")
+            }
+            else {
+                return ""
+            }
+        }
         // MARK: Parameter Settings
         let param: Parameters = [
             "ServiceKey": getAPIKey(hostName: .kmdb),
             "collection": "kmdb_new2",
             "detail": "Y",
-            "title": title
+            "title": title,
+            "releaseDts": date
         ]
         
         AF.request(url, method: .get, parameters: param)
@@ -80,41 +90,6 @@ class APIService {
                             completion(result)
                         } else {
                             completion([])
-                        }
-                        
-                    } catch {
-                        print("GETIMAGE Decode ERROR: \(error.localizedDescription)")
-                    }
-                    break
-                case let .failure(error):
-                    print("GETIMAGE ERROR CODE: \(String(describing: error.responseCode))")
-                    print("\(error.localizedDescription)")
-                    break
-                }
-            })
-    }
-    func getPosterImage(title: String, releaseDate: String, completion: @escaping (String) -> Void) {
-        let url = APIInfo.movieDetailHost
-        // MARK: Parameter Settings
-        let param: Parameters = [
-            "ServiceKey": getAPIKey(hostName: .kmdb),
-            "collection": "kmdb_new2",
-            "detail": "Y",
-            "title": title,
-            "releaseDts": releaseDate.replacingOccurrences(of: "-", with: "")
-        ]
-        
-        AF.request(url, method: .get, parameters: param)
-            .responseData(completionHandler: { response in
-                switch response.result {
-                case let .success(data):
-                    do {
-                        let decode = JSONDecoder()
-                        let temp = try decode.decode(MovieDetail.self, from: data)
-                        if let result = temp.data[0].result {
-                            completion(result[0].posters)
-                        } else {
-                            completion("")
                         }
                         
                     } catch {

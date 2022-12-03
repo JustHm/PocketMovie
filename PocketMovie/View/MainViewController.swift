@@ -23,7 +23,8 @@ class MainViewController: UIViewController {
 
         let layout = UICollectionViewFlowLayout()
         let vc = MovieSearchViewController(collectionViewLayout: layout)
-        searchController = UISearchController(searchResultsController: vc)
+        let nav = UINavigationController(rootViewController: vc)
+        searchController = UISearchController(searchResultsController: nav)
         searchController.searchBar.placeholder = "Search Movie"
         searchController.obscuresBackgroundDuringPresentation = true
         searchController.searchBar.delegate = vc.self
@@ -37,7 +38,8 @@ class MainViewController: UIViewController {
     }
     private func initSubView() {
         let layout = UICollectionViewFlowLayout()
-        subVC = HomeViewController(collectionViewLayout: layout)
+        let vc = HomeViewController(collectionViewLayout: layout)
+        subVC = vc
         
         self.addChild(subVC)
         self.view.addSubview(subVC.view)
