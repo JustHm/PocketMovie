@@ -15,6 +15,8 @@ class MovieDetailViewController: UIViewController {
     
     var stillCollection: UICollectionViewController!
     var posters: [String] = []
+    var starButton: UIBarButtonItem?
+    var isStar: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,8 +27,6 @@ class MovieDetailViewController: UIViewController {
         stillCollection.collectionView.dataSource = self
         stillCollection.collectionView.delegate = self
         stillCollection.collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
-        
-//        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left.circle.fill"), style: .plain, target: nil, action: nil)
 
         view.backgroundColor = .black
         view.layer.cornerRadius = 5
@@ -41,7 +41,7 @@ class MovieDetailViewController: UIViewController {
         }
         
         stillCollection.collectionView.snp.makeConstraints {
-            $0.top.left.right.equalToSuperview()
+            $0.top.left.right.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(250)
         }
 
@@ -52,8 +52,6 @@ class MovieDetailViewController: UIViewController {
             $0.left.right.equalToSuperview().inset(12)
             $0.top.equalTo(stillCollection.collectionView.snp.bottom).offset(12)
         }
-        
-        
         
         subInfo.shadowColor = .gray
         subInfo.shadowOffset = CGSize(width: 1, height: 1)
@@ -69,14 +67,30 @@ class MovieDetailViewController: UIViewController {
             $0.top.equalTo(subInfo.snp.bottom).offset(12)
         }
     }
+    @objc private func leftBarButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    @objc private func rightBarButtonTapped(_ sender: Any) {
+        starButton?.image = UIImage(systemName: "star.fill")
+    }
     
     func configureUI(data: Movie?) {
         guard let data = data else { return }
         titleLabel.text = data.movieNm
         discriptionLabel.text = String(describing: data.plots.plot[0].plotText)
         posters = data.posters.components(separatedBy: "|")
-        subInfo.text = String(describing: "|\(data.genre)| |\(data.rating)| |\(data.runtime)분|")
-        print(data.vods.vod[0])
+        subInfo.text = String(describing: "|\(data.prodYear)| |\(data.genre)| |\(data.rating)| |\(data.runtime)분|")
+        
+        if let temp = UserDefaults.standard.object(forKey: data.docid) as? Bool {
+            isStar = temp
+        }
+        
+        starButton = UIBarButtonItem(image: nil, style: .plain, target: self, action: #selector(rightBarButtonTapped))
+        starButton?.image = isStar ? UIImage(systemName: "star") : UIImage(systemName: "star.fill")
+        navigationItem.rightBarButtonItem = starButton
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left.circle.fill"), style: .plain, target: self, action: #selector(leftBarButtonTapped))
+        navigationItem.leftBarButtonItem?.tintColor = .white
+        navigationItem.rightBarButtonItem?.tintColor = .yellow
     }
 }
 

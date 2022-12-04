@@ -13,6 +13,11 @@ class HomeViewController: UICollectionViewController {
     var weeklyList: [MovieInfo] = []
     var boxOfficeInfo: [String: Movie] = [:]
     var searchController: UISearchController!
+    /*
+     UserDefaults에 들어갈 친구들
+     DOCID: true or false // 별표 누른 영화 목록
+     [Movie] // 별표 누른 영화 정보
+     */
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,11 +50,13 @@ class HomeViewController: UICollectionViewController {
         APIService.shared.boxOfficeResponse(range: .daily, completion: { [weak self] response in
             guard let data = response.boxOfficeResult.dailyBoxOfficeList else {return}
             self?.dailyList = data
+            print(self?.dailyList)
             self?.getMovieInfo()
         })
         APIService.shared.boxOfficeResponse(range: .weekly, completion: {[weak self] response in
             guard let data = response.boxOfficeResult.weeklyBoxOfficeList else {return}
             self?.weeklyList = data
+            print(self?.weeklyList)
             self?.getMovieInfo()
         })
     }
@@ -95,7 +102,7 @@ extension HomeViewController {
         // group
         let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(200))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
-        //        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 2)
+        //        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 1)
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
@@ -183,7 +190,7 @@ extension HomeViewController {
         vc.configureUI(data: boxOfficeInfo[selectedMovie]!)
 //        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
         
-        navigationController?.present(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 
