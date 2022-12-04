@@ -19,13 +19,16 @@ class MovieCell: UICollectionViewCell {
         imageView.contentMode = .scaleAspectFit
         imageView.snp.makeConstraints {
             $0.top.bottom.equalToSuperview()
-            $0.width.equalToSuperview().multipliedBy(0.8)
+            $0.width.equalToSuperview()
         }
         
         titleLabel.font = .systemFont(ofSize: 8, weight: .light)
+        titleLabel.numberOfLines = 0
+        titleLabel.textAlignment = .center
         titleLabel.sizeToFit()
         titleLabel.snp.makeConstraints {
-            $0.left.bottom.equalTo(imageView)
+            $0.centerX.equalToSuperview()
+            $0.top.equalTo(imageView.snp.bottom)
         }
     }
     

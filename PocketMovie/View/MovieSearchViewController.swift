@@ -8,6 +8,7 @@
 import UIKit
 
 class MovieSearchViewController: UICollectionViewController {
+    var query = ""
     var searchResult: [Movie] = []
     let discriptionLabel = UILabel()
     
@@ -20,13 +21,14 @@ class MovieSearchViewController: UICollectionViewController {
         discriptionLabel.snp.makeConstraints {
             $0.center.equalToSuperview()
         }
+        collectionView.prefetchDataSource = self
         collectionView.register(MovieCell.self, forCellWithReuseIdentifier: "MovieCell")
     }
-//    override func viewDidDisappear(_ animated: Bool) {
-//        super.viewDidDisappear(animated)
-//        self.searchResult = []
-//        self.collectionView.reloadData()
-//    }
+    
+    override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        //print("scroll end")
+        fetchMovie(text: query)
+    }
     
     override func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
@@ -39,7 +41,7 @@ class MovieSearchViewController: UICollectionViewController {
         
         let data = searchResult[indexPath.row]
         let poster = data.posters.components(separatedBy: "|")[0]
-        cell.configureCell(imageURL: poster, title: data.title)
+        cell.configureCell(imageURL: poster, title: data.movieNm)
         
         return cell
     }
@@ -52,19 +54,44 @@ class MovieSearchViewController: UICollectionViewController {
     }
 }
 
+extension MovieSearchViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let screenWidth = view.bounds.width
+        return CGSize(width: screenWidth/3, height: screenWidth/2)
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
+        return 10
+    }
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
+        let screenWidth = view.bounds.width / 10
+        return UIEdgeInsets(top: 0, left: screenWidth, bottom: 0, right: screenWidth)
+    }
+}
+extension MovieSearchViewController: UICollectionViewDataSourcePrefetching {
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        print(indexPaths)
+    }
+}
+
 extension MovieSearchViewController: UISearchBarDelegate {
     func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
         guard let text = searchBar.text else { return }
-        APIService.shared.searchMovie(title: text, releaseDate: nil, completion: { [weak self] response in
-            if response.isEmpty {
+        query = text
+        searchResult.removeAll()
+        fetchMovie(text: text)
+    }
+    private func fetchMovie(text: String) {
+        APIService.shared.searchMovie(title: text, releaseDate: nil, startCount: searchResult.count, completion: { [weak self] response in
+            if response.result == nil, (self?.searchResult.isEmpty ?? true) {
                 self?.discriptionLabel.isHidden = false
                 self?.searchResult = []
+                return
             }
-            else {
+            if let temp = response.result, !temp.isEmpty {
                 self?.discriptionLabel.isHidden = true
-                self?.searchResult = response
+                self?.searchResult.append(contentsOf: temp)
+                self?.collectionView.reloadData()
             }
-            self?.collectionView.reloadData()
         })
     }
 }

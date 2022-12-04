@@ -29,7 +29,7 @@ class APIService {
     }
     private var weeklyDate: String { // 저번주 날짜로 설정해야함.
         let date = Date()
-        guard let yesterday = Calendar.current.date(byAdding: .day, value: -6, to: date) else { return "20221125" }
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -7, to: date) else { return "20221125" }
         return dateFormatter.string(from: yesterday)
     }
     
@@ -68,7 +68,7 @@ class APIService {
             })
     }
         
-    func searchMovie(title: String, releaseDate: String?, completion: @escaping ([Movie]) -> Void) {
+    func searchMovie(title: String, releaseDate: String?, startCount: Int, completion: @escaping (Movies) -> Void) {
         let url = APIInfo.movieDetailHost
         var date: String {
             if let temp = releaseDate {
@@ -84,7 +84,8 @@ class APIService {
             "collection": "kmdb_new2",
             "detail": "Y",
             "title": title,
-            "releaseDts": date
+            "releaseDts": date,
+            "startCount": startCount
         ]
         
         AF.request(url, method: .get, parameters: param)
@@ -94,10 +95,10 @@ class APIService {
                     do {
                         let decode = JSONDecoder()
                         let temp = try decode.decode(MovieDetail.self, from: data)
-                        if let result = temp.data[0].result {
-                            completion(result)
+                        if temp.data[0].result != nil {
+                            completion(temp.data[0])
                         } else {
-                            completion([])
+                            completion(Movies(result: nil, totalCount: 0, count: 0))
                         }
                     } catch {
                         print("GETIMAGE Decode ERROR: \(error.localizedDescription)")

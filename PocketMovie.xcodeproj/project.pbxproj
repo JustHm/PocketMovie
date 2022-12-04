@@ -72,7 +72,6 @@
 				22502B71292FCCAF00660F91 /* HomeViewController.swift */,
 				223397B02939FBC80055621B /* MovieDetailViewController.swift */,
 				223397B5293A2E320055621B /* MovieSearchViewController.swift */,
-				223397AC2937A75D0055621B /* CollectionViewHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -80,6 +79,7 @@
 		223397B9293B731E0055621B /* Cell */ = {
 			isa = PBXGroup;
 			children = (
+				223397AC2937A75D0055621B /* CollectionViewHeader.swift */,
 				223397A4293358B50055621B /* BoxOfficeCell.swift */,
 				223397B7293A3CEC0055621B /* MovieCell.swift */,
 				223397BA293B73440055621B /* ImageCell.swift */,

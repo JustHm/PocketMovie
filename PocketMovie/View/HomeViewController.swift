@@ -12,7 +12,6 @@ class HomeViewController: UICollectionViewController {
     var dailyList: [MovieInfo] = []
     var weeklyList: [MovieInfo] = []
     var boxOfficeInfo: [String: Movie] = [:]
-    
     var searchController: UISearchController!
     
     override func viewDidLoad() {
@@ -65,9 +64,9 @@ class HomeViewController: UICollectionViewController {
     }
     private func requsetMovieInfo(value: MovieInfo) {
         guard boxOfficeInfo[value.movieNm] != nil else {
-            APIService.shared.searchMovie(title: value.movieNm, releaseDate: value.openDt, completion: { [weak self] response in
-                if !response.isEmpty {
-                    self?.boxOfficeInfo[value.movieNm] = response[0]
+            APIService.shared.searchMovie(title: value.movieNm, releaseDate: value.openDt, startCount: 0, completion: { [weak self] response in
+                if let temp = response.result {
+                    self?.boxOfficeInfo[value.movieNm] = temp[0]
                     self?.collectionView.reloadData()
                 }
             })

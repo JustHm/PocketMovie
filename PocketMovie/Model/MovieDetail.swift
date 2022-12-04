@@ -19,9 +19,12 @@ struct MovieDetail: Codable {
 // MARK: - Movies
 struct Movies: Codable {
     let result: [Movie]? // 여기부터 영화 상세 정보.
-
+    let totalCount: Int
+    let count: Int
     enum CodingKeys: String, CodingKey {
         case result = "Result"
+        case totalCount = "TotalCount"
+        case count = "Count"
     }
 }
 
