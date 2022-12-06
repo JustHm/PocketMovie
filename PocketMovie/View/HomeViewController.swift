@@ -181,11 +181,11 @@ extension HomeViewController {
             
             switch indexPath.section {
             case 0:
-                let text = dailyList[indexPath.row].rankOldAndNew
-                badge.label.text = text
+                let data = dailyList[indexPath.row]
+                badge.configureBadge(text: data.rankOldAndNew)
             case 1:
-                let text = weeklyList[indexPath.row].rankOldAndNew
-                badge.label.text = text
+                let data = weeklyList[indexPath.row]
+                badge.configureBadge(text: data.rankOldAndNew)
             default:
                 return UICollectionReusableView()
             }
