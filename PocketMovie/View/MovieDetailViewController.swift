@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import SwiftUI
 
 class MovieDetailViewController: UIViewController {
     let titleLabel = UILabel()
@@ -27,7 +26,7 @@ class MovieDetailViewController: UIViewController {
         stillCollection.collectionView.dataSource = self
         stillCollection.collectionView.delegate = self
         stillCollection.collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
-
+        
         view.backgroundColor = .black
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
@@ -44,7 +43,7 @@ class MovieDetailViewController: UIViewController {
             $0.top.left.right.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(250)
         }
-
+        
         titleLabel.shadowColor = .gray
         titleLabel.shadowOffset = CGSize(width: 2, height: 2)
         titleLabel.font = .systemFont(ofSize: 24, weight: .black)
@@ -113,23 +112,6 @@ extension MovieDetailViewController: UICollectionViewDelegateFlowLayout {
         return 0
     }
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-           return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
-    }
-    
-}
-
-
-// SwiftUI Preview Provider
-struct DetailViewController_Preview: PreviewProvider {
-    static var previews: some View {
-        Container().edgesIgnoringSafeArea(.all)
-    }
-    
-    struct Container: UIViewControllerRepresentable {
-        func makeUIViewController(context: Context) -> UIViewController {
-            let vc = MovieDetailViewController()
-            return UINavigationController(rootViewController: vc)
-        }
-        func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
 }

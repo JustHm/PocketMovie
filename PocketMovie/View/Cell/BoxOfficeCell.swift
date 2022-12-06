@@ -17,8 +17,8 @@ class BoxOfficeCell: UICollectionViewCell {
         super.layoutSubviews()
         contentView.layer.cornerRadius = 5
         contentView.clipsToBounds = true
-//        true로 설정하면 subview가 view의 경계를 넘어갈 시 잘리며
-//        false로 설정하면 경계를 넘어가도 잘리지 않게 되는 것!
+        //        true로 설정하면 subview가 view의 경계를 넘어갈 시 잘리며
+        //        false로 설정하면 경계를 넘어가도 잘리지 않게 되는 것!
         [imageView, rankLabel].forEach {
             addSubview($0)
         }

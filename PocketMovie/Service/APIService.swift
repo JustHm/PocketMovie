@@ -10,9 +10,6 @@ import Alamofire
 private enum ApiKey: String {
     case kobis, kmdb
 }
-enum KmdbType: String {
-    case search, getImage
-}
 
 class APIService {
     // MARK: Property
@@ -67,7 +64,7 @@ class APIService {
                 }
             })
     }
-        
+    
     func searchMovie(title: String, releaseDate: String?, startCount: Int, completion: @escaping (Movies) -> Void) {
         let url = APIInfo.movieDetailHost
         var date: String {

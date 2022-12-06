@@ -92,11 +92,11 @@ extension MovieSearchViewController: UISearchBarDelegate {
                 
                 // 생성되어 있는 cell과 대응되지 않아 오류가 뜨고 걍 reeloadData로 실행된다..
                 // 그래도 아래 방법으로 하면 데이터를 더 가져올때 깜빡이는 현상은 사라진다.
-//                let startIndex = (self?.searchResult.count)!
-//                let indexPath: [IndexPath] = (startIndex..<(startIndex + temp.count)).map {
-//                    return [0, $0]
-//                }
-//                self?.collectionView.reloadItems(at: indexPath)
+                //                let startIndex = (self?.searchResult.count)!
+                //                let indexPath: [IndexPath] = (startIndex..<(startIndex + temp.count)).map {
+                //                    return [0, $0]
+                //                }
+                //                self?.collectionView.reloadItems(at: indexPath)
             }
         })
     }

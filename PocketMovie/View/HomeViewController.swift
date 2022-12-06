@@ -8,16 +8,18 @@
 import UIKit
 import SwiftUI
 
+struct ElementKind {
+    static let badge = "badge-element-kind"
+    static let background = "background-element-kind"
+    static let sectionHeader = "section-header-element-kind"
+    static let sectionFooter = "section-footer-element-kind"
+}
+
 class HomeViewController: UICollectionViewController {
     var dailyList: [MovieInfo] = []
     var weeklyList: [MovieInfo] = []
     var boxOfficeInfo: [String: Movie] = [:]
     var searchController: UISearchController!
-    /*
-     UserDefaults에 들어갈 친구들
-     DOCID: true or false // 별표 누른 영화 목록
-     [Movie] // 별표 누른 영화 정보
-     */
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,25 +40,24 @@ class HomeViewController: UICollectionViewController {
         searchController.searchBar.delegate = vc.self
         self.navigationItem.searchController = searchController
         
-        
         getRankData()
         
         collectionView.register(BoxOfficeCell.self, forCellWithReuseIdentifier: "BoxOfficeCell")
-        collectionView.register(CollectionViewHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: "CollectionViewHeader")
+        collectionView.register(CollectionViewHeader.self, forSupplementaryViewOfKind: ElementKind.sectionHeader, withReuseIdentifier: "CollectionViewHeader")
+        collectionView.register(BoxOfficeBadge.self, forSupplementaryViewOfKind: ElementKind.badge, withReuseIdentifier: "BoxOfficeBadge")
         collectionView.collectionViewLayout = layout()
+        
     }
     
     private func getRankData() {
         APIService.shared.boxOfficeResponse(range: .daily, completion: { [weak self] response in
             guard let data = response.boxOfficeResult.dailyBoxOfficeList else {return}
             self?.dailyList = data
-            print(self?.dailyList)
             self?.getMovieInfo()
         })
         APIService.shared.boxOfficeResponse(range: .weekly, completion: {[weak self] response in
             guard let data = response.boxOfficeResult.weeklyBoxOfficeList else {return}
             self?.weeklyList = data
-            print(self?.weeklyList)
             self?.getMovieInfo()
         })
     }
@@ -97,31 +98,36 @@ extension HomeViewController {
     private func boxOfficeSection() -> NSCollectionLayoutSection {
         // layout
         let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalHeight(0.8))
-        let item = NSCollectionLayoutItem(layoutSize: layoutSize)
+        let item = NSCollectionLayoutItem(layoutSize: layoutSize,supplementaryItems: [createGroupBadge()])
         item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5)
         // group
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .estimated(200))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
-        //        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, repeatingSubitem: item, count: 1)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(500), heightDimension: .estimated(200))
+        //        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         // section
         let section = NSCollectionLayoutSection(group: group)
         section.orthogonalScrollingBehavior = .continuous
         section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 15, trailing: 5)
-        
         let sectionHeader = createSectionHeader()
         section.boundarySupplementaryItems = [sectionHeader]
         return section
+    }
+    // create badge
+    private func createGroupBadge() -> NSCollectionLayoutSupplementaryItem {
+        let layoutSize = NSCollectionLayoutSize(widthDimension: .estimated(24), heightDimension: .estimated(24))
+        let anchor = NSCollectionLayoutAnchor(edges: [.top, .trailing], fractionalOffset: CGPoint(x: 0, y: -1))
+        let badge = NSCollectionLayoutSupplementaryItem(layoutSize: layoutSize, elementKind: ElementKind.badge, containerAnchor: anchor)
+        return badge
     }
     // sectionHeader Layout settings
     private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
         //Section Header Size
         let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(30))
         // Section Header Layout
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
+        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: ElementKind.sectionHeader, alignment: .top)
         
         return sectionHeader
     }
-
 }
 // MARK: UICollectionViewDataSource
 extension HomeViewController {
@@ -158,7 +164,7 @@ extension HomeViewController {
     }
     
     override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == UICollectionView.elementKindSectionHeader {
+        if kind == ElementKind.sectionHeader {
             guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CollectionViewHeader", for: indexPath) as? CollectionViewHeader else { return UICollectionReusableView() }
             switch indexPath.section {
             case 0:
@@ -169,7 +175,23 @@ extension HomeViewController {
                 return UICollectionReusableView()
             }
             return headerView
-        } else {
+        }
+        else if kind == ElementKind.badge {
+            guard let badge = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BoxOfficeBadge", for: indexPath) as? BoxOfficeBadge else { return UICollectionReusableView() }
+            
+            switch indexPath.section {
+            case 0:
+                let text = dailyList[indexPath.row].rankOldAndNew
+                badge.label.text = text
+            case 1:
+                let text = weeklyList[indexPath.row].rankOldAndNew
+                badge.label.text = text
+            default:
+                return UICollectionReusableView()
+            }
+            return badge
+        }
+        else {
             return UICollectionReusableView()
         }
     }
@@ -188,7 +210,7 @@ extension HomeViewController {
         
         let vc = MovieDetailViewController()
         vc.configureUI(data: boxOfficeInfo[selectedMovie]!)
-//        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
+        //        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
         
         navigationController?.pushViewController(vc, animated: true)
     }

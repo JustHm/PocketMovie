@@ -13,7 +13,7 @@ class ImageCell: UICollectionViewCell {
         super.layoutSubviews()
         addSubview(imageView)
         imageView.contentMode = .scaleAspectFit
-//        imageView.sizeToFit()
+        //        imageView.sizeToFit()
         imageView.backgroundColor = .black
         imageView.snp.makeConstraints {
             $0.center.equalToSuperview()

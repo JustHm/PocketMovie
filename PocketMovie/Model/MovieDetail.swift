@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Root
 struct MovieDetail: Codable {
     let data: [Movies] // 배열로 되어있는 의미를 모르겠음 걍 하나임
-
+    
     enum CodingKeys: String, CodingKey {
         case data = "Data"
     }
@@ -60,7 +60,7 @@ struct Movie: Codable {
     let codes: Codes
     let commCodes: CommCodes
     let alias: String
-
+    
     enum CodingKeys: String, CodingKey {
         case docid = "DOCID"
         case movieID = "movieId"
@@ -84,7 +84,7 @@ struct Actors: Codable {
 // MARK: - Actor
 struct Actor: Codable {
     let actorNm, actorEnNm, actorID: String
-
+    
     enum CodingKeys: String, CodingKey {
         case actorNm, actorEnNm
         case actorID = "actorId"
@@ -94,7 +94,7 @@ struct Actor: Codable {
 // MARK: - Codes
 struct Codes: Codable {
     let code: [Code]
-
+    
     enum CodingKeys: String, CodingKey {
         case code = "Code"
     }
@@ -103,7 +103,7 @@ struct Codes: Codable {
 // MARK: - Code
 struct Code: Codable {
     let codeNm, codeNo: String
-
+    
     enum CodingKeys: String, CodingKey {
         case codeNm = "CodeNm"
         case codeNo = "CodeNo"
@@ -113,7 +113,7 @@ struct Code: Codable {
 // MARK: - CommCodes
 struct CommCodes: Codable {
     let commCode: [Code]
-
+    
     enum CodingKeys: String, CodingKey {
         case commCode = "CommCode"
     }
@@ -127,7 +127,7 @@ struct Directors: Codable {
 // MARK: - Director
 struct Director: Codable {
     let directorNm, directorEnNm, directorID: String
-
+    
     enum CodingKeys: String, CodingKey {
         case directorNm, directorEnNm
         case directorID = "directorId"
@@ -164,7 +164,7 @@ struct Staffs: Codable {
 struct Staff: Codable {
     let staffNm, staffEnNm, staffRoleGroup, staffRole: String
     let staffEtc, staffID: String
-
+    
     enum CodingKeys: String, CodingKey {
         case staffNm, staffEnNm, staffRoleGroup, staffRole, staffEtc
         case staffID = "staffId"
@@ -186,7 +186,7 @@ struct Vods: Codable {
 struct VOD: Codable {
     let vodClass: String
     let vodURL: String
-
+    
     enum CodingKeys: String, CodingKey {
         case vodClass
         case vodURL = "vodUrl"

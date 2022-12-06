@@ -24,9 +24,9 @@
 		22502B70292FCC4100660F91 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22502B6F292FCC4100660F91 /* Kingfisher */; };
 		22502B72292FCCAF00660F91 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B71292FCCAF00660F91 /* HomeViewController.swift */; };
 		22502B742930D98200660F91 /* BoxOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B732930D98200660F91 /* BoxOffice.swift */; };
-		22502B772930F02B00660F91 /* NaverMovieSearch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B762930F02B00660F91 /* NaverMovieSearch.swift */; };
 		22502B7D2931193500660F91 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B7C2931193500660F91 /* APIService.swift */; };
 		22502B7F2931199D00660F91 /* APIInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B7E2931199D00660F91 /* APIInfo.swift */; };
+		22CD324D293F5FC000F359A6 /* BoxOfficeBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,9 +46,9 @@
 		22502B62292FCBB100660F91 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22502B71292FCCAF00660F91 /* HomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		22502B732930D98200660F91 /* BoxOffice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOffice.swift; sourceTree = "<group>"; };
-		22502B762930F02B00660F91 /* NaverMovieSearch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaverMovieSearch.swift; sourceTree = "<group>"; };
 		22502B7C2931193500660F91 /* APIService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIService.swift; sourceTree = "<group>"; };
 		22502B7E2931199D00660F91 /* APIInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIInfo.swift; sourceTree = "<group>"; };
+		22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeBadge.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +83,7 @@
 				223397A4293358B50055621B /* BoxOfficeCell.swift */,
 				223397B7293A3CEC0055621B /* MovieCell.swift */,
 				223397BA293B73440055621B /* ImageCell.swift */,
+				22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -123,7 +124,6 @@
 			isa = PBXGroup;
 			children = (
 				22502B732930D98200660F91 /* BoxOffice.swift */,
-				22502B762930F02B00660F91 /* NaverMovieSearch.swift */,
 				223397AE2938A26E0055621B /* MovieDetail.swift */,
 			);
 			path = Model;
@@ -222,11 +222,11 @@
 				223397B8293A3CEC0055621B /* MovieCell.swift in Sources */,
 				22502B55292FCBB000660F91 /* AppDelegate.swift in Sources */,
 				223397AD2937A75D0055621B /* CollectionViewHeader.swift in Sources */,
-				22502B772930F02B00660F91 /* NaverMovieSearch.swift in Sources */,
 				22502B57292FCBB000660F91 /* SceneDelegate.swift in Sources */,
 				223397BB293B73440055621B /* ImageCell.swift in Sources */,
 				223397A5293358B50055621B /* BoxOfficeCell.swift in Sources */,
 				223397B6293A2E320055621B /* MovieSearchViewController.swift in Sources */,
+				22CD324D293F5FC000F359A6 /* BoxOfficeBadge.swift in Sources */,
 				22502B72292FCCAF00660F91 /* HomeViewController.swift in Sources */,
 				22502B7D2931193500660F91 /* APIService.swift in Sources */,
 				223397AF2938A26E0055621B /* MovieDetail.swift in Sources */,
