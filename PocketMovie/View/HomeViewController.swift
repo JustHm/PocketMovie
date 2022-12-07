@@ -36,7 +36,6 @@ class HomeViewController: UICollectionViewController {
         let nav = UINavigationController(rootViewController: vc)
         searchController = UISearchController(searchResultsController: nav)
         searchController.searchBar.placeholder = "Search Movie"
-        searchController.obscuresBackgroundDuringPresentation = true
         searchController.searchBar.delegate = vc.self
         self.navigationItem.searchController = searchController
         

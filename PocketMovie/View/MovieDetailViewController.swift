@@ -6,16 +6,17 @@
 //
 
 import UIKit
+import SafariServices
 
 class MovieDetailViewController: UIViewController {
     let titleLabel = UILabel()
     let subInfo = UILabel()
     let discriptionLabel = UILabel()
+    @objc let kmdbLinkButton = UIButton()
     
     var stillCollection: UICollectionViewController!
     var posters: [String] = []
-    var starButton: UIBarButtonItem?
-    var isStar: Bool = false
+    var kmdbURL: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,7 +32,7 @@ class MovieDetailViewController: UIViewController {
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
         
-        [stillCollection.collectionView, titleLabel, subInfo, discriptionLabel].forEach {
+        [stillCollection.collectionView, titleLabel, subInfo, discriptionLabel, kmdbLinkButton].forEach {
             view.addSubview($0)
         }
         [titleLabel, subInfo, discriptionLabel].forEach {
@@ -65,12 +66,18 @@ class MovieDetailViewController: UIViewController {
             $0.left.right.equalToSuperview().inset(12)
             $0.top.equalTo(subInfo.snp.bottom).offset(12)
         }
+        kmdbLinkButton.snp.makeConstraints {
+            $0.top.equalTo(discriptionLabel.snp.bottom).offset(12)
+            $0.left.equalToSuperview().inset(12)
+        }
     }
     @objc private func leftBarButtonTapped() {
         navigationController?.popViewController(animated: true)
     }
-    @objc private func rightBarButtonTapped(_ sender: Any) {
-        starButton?.image = UIImage(systemName: "star.fill")
+    @objc private func kmdbLinkButtonTapped() {
+        guard let url = kmdbURL else { return }
+        let safariView = SFSafariViewController(url: url)
+        self.present(safariView, animated: true, completion: nil)
     }
     
     func configureUI(data: Movie?) {
@@ -80,16 +87,14 @@ class MovieDetailViewController: UIViewController {
         posters = data.posters.components(separatedBy: "|")
         subInfo.text = String(describing: "|\(data.prodYear)| |\(data.genre)| |\(data.rating)| |\(data.runtime)분|")
         
-        if let temp = UserDefaults.standard.object(forKey: data.docid) as? Bool {
-            isStar = temp
-        }
+        kmdbURL = URL(string: data.kmdbURL)
+        kmdbLinkButton.setTitle("KMDB 링크", for: .normal)
+        kmdbLinkButton.setTitleColor(.tintColor, for: .normal)
+        kmdbLinkButton.titleLabel?.font = .systemFont(ofSize: 14)
+        kmdbLinkButton.addTarget(self, action: #selector(kmdbLinkButtonTapped), for: .touchUpInside)
         
-        starButton = UIBarButtonItem(image: nil, style: .plain, target: self, action: #selector(rightBarButtonTapped))
-        starButton?.image = isStar ? UIImage(systemName: "star") : UIImage(systemName: "star.fill")
-        navigationItem.rightBarButtonItem = starButton
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.left.circle.fill"), style: .plain, target: self, action: #selector(leftBarButtonTapped))
         navigationItem.leftBarButtonItem?.tintColor = .white
-        navigationItem.rightBarButtonItem?.tintColor = .yellow
     }
 }
 

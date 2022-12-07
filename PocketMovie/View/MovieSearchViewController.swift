@@ -25,7 +25,6 @@ class MovieSearchViewController: UICollectionViewController {
     }
     
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        //print("scroll end")
         fetchMovie(text: query)
     }
     
@@ -89,7 +88,6 @@ extension MovieSearchViewController: UISearchBarDelegate {
                 self?.discriptionLabel.isHidden = true
                 self?.searchResult.append(contentsOf: temp)
                 self?.collectionView.reloadData()
-                
                 // 생성되어 있는 cell과 대응되지 않아 오류가 뜨고 걍 reeloadData로 실행된다..
                 // 그래도 아래 방법으로 하면 데이터를 더 가져올때 깜빡이는 현상은 사라진다.
                 //                let startIndex = (self?.searchResult.count)!
@@ -103,6 +101,7 @@ extension MovieSearchViewController: UISearchBarDelegate {
 }
 
 extension MovieSearchViewController: UISearchResultsUpdating {
+    //searchBar에 text가 업데이트 될 때 마다 호출됨.
     func updateSearchResults(for searchController: UISearchController) {
         if searchController.searchBar.text == "" {
             self.searchResult = []
