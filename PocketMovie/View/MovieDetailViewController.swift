@@ -14,25 +14,28 @@ class MovieDetailViewController: UIViewController {
     let discriptionLabel = UILabel()
     @objc let kmdbLinkButton = UIButton()
     
-    var stillCollection: UICollectionViewController!
+    private lazy var collectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.isPagingEnabled = true
+        collectionView.showsHorizontalScrollIndicator = false
+        collectionView.dataSource = self
+        collectionView.delegate = self
+        collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
+        return collectionView
+    }()
     var posters: [String] = []
     var kmdbURL: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        stillCollection = UICollectionViewController(collectionViewLayout: layout)
-        stillCollection.collectionView.dataSource = self
-        stillCollection.collectionView.delegate = self
-        stillCollection.collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
-        
         view.backgroundColor = .black
         view.layer.cornerRadius = 5
         view.clipsToBounds = true
         
-        [stillCollection.collectionView, titleLabel, subInfo, discriptionLabel, kmdbLinkButton].forEach {
+        [collectionView, titleLabel, subInfo, discriptionLabel, kmdbLinkButton].forEach {
             view.addSubview($0)
         }
         [titleLabel, subInfo, discriptionLabel].forEach {
@@ -40,7 +43,7 @@ class MovieDetailViewController: UIViewController {
             $0.sizeToFit()
         }
         
-        stillCollection.collectionView.snp.makeConstraints {
+        collectionView.snp.makeConstraints {
             $0.top.left.right.equalTo(view.safeAreaLayoutGuide)
             $0.height.equalTo(250)
         }
@@ -50,7 +53,7 @@ class MovieDetailViewController: UIViewController {
         titleLabel.font = .systemFont(ofSize: 24, weight: .black)
         titleLabel.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(12)
-            $0.top.equalTo(stillCollection.collectionView.snp.bottom).offset(12)
+            $0.top.equalTo(collectionView.snp.bottom).offset(12)
         }
         
         subInfo.shadowColor = .gray
