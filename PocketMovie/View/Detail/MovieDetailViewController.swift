@@ -9,6 +9,7 @@ import UIKit
 import SafariServices
 
 class MovieDetailViewController: UIViewController {
+    private let cellHeight: CGFloat = 250
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.shadowColor = .gray
@@ -43,11 +44,14 @@ class MovieDetailViewController: UIViewController {
     private lazy var collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        //isPagingEnabled가 true일때 sectionSpacing이 0이여야 밀림현상이 없다.
+        //https://stackoverflow.com/questions/29658328/uicollectionview-horizontal-paging-not-centered
+        layout.itemSize = CGSize(width: view.frame.width, height: cellHeight)
+        layout.minimumLineSpacing = 0
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.isPagingEnabled = true
         collectionView.showsHorizontalScrollIndicator = false
         collectionView.dataSource = self
-        collectionView.delegate = self
         collectionView.register(ImageCell.self, forCellWithReuseIdentifier: "ImageCell")
         return collectionView
     }()
@@ -74,19 +78,9 @@ extension MovieDetailViewController: UICollectionViewDataSource{
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageCell", for: indexPath) as? ImageCell else { return UICollectionViewCell() }
         
-        cell.configureCell(imageURL: posters[indexPath.row])
+        cell.setup(imageURL: posters[indexPath.row])
         
         return cell
-    }
-}
-
-extension MovieDetailViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0 //isPagingEnabled가 true일때 sectionSpacing이 0이여야 밀림현상이 없다.
-        // https://stackoverflow.com/questions/29658328/uicollectionview-horizontal-paging-not-centered
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: collectionView.frame.height)
     }
 }
 // MARK: UI & EVENT SETTINGS
@@ -101,7 +95,7 @@ private extension MovieDetailViewController {
         }
         collectionView.snp.makeConstraints {
             $0.top.left.right.equalTo(view.safeAreaLayoutGuide)
-            $0.height.equalTo(250)
+            $0.height.equalTo(cellHeight)
         }
         titleLabel.snp.makeConstraints {
             $0.left.right.equalToSuperview().inset(12)

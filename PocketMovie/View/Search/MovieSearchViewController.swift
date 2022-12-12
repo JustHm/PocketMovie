@@ -27,10 +27,6 @@ class MovieSearchViewController: UICollectionViewController {
     override func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         fetchMovie(text: query)
     }
-    
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return searchResult.count
     }
@@ -39,7 +35,7 @@ class MovieSearchViewController: UICollectionViewController {
         
         let data = searchResult[indexPath.row]
         let poster = data.posters.components(separatedBy: "|")[0]
-        cell.configureCell(imageURL: poster, title: data.movieNm)
+        cell.setup(imageURL: poster, title: data.movieNm)
         
         return cell
     }
@@ -63,10 +59,6 @@ extension MovieSearchViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, insetForSectionAt section: Int) -> UIEdgeInsets {
         let screenWidth = view.bounds.width / 10
         return UIEdgeInsets(top: 0, left: screenWidth, bottom: 0, right: screenWidth)
-    }
-}
-extension MovieSearchViewController: UICollectionViewDataSourcePrefetching {
-    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
     }
 }
 

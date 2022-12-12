@@ -102,7 +102,6 @@ extension HomeViewController {
         item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5)
         // group
         let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(500), heightDimension: .estimated(200))
-        //        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitem: item, count: 2)
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         // section
         let section = NSCollectionLayoutSection(group: group)
