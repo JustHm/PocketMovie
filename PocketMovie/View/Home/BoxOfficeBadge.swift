@@ -8,31 +8,34 @@
 import UIKit
 
 class BoxOfficeBadge: UICollectionReusableView {
-    let label = UILabel()
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.layer.cornerRadius = 5
-        
-        addSubview(label)
+    private lazy var label: UILabel = {
+        let label = UILabel()
         label.sizeToFit()
-        label.font = .systemFont(ofSize: 10)
+        label.font = .systemFont(ofSize: 12, weight: .bold)
         label.textColor = .orange
+        return label
+    }()
+    func setup(text: String) {
+        configureBadge(text: text)
+        setupView()
+    }
+}
+
+private extension BoxOfficeBadge {
+    func setupView() {
+        addSubview(label)
         label.snp.makeConstraints {
             $0.edges.equalToSuperview().inset(1)
         }
     }
-    
     func configureBadge(text: String) {
         guard text == "NEW" else {
             label.isHidden = true
-            self.layer.backgroundColor = UIColor.clear.cgColor
             return
         }
-        
-        self.layer.backgroundColor = UIColor.white.cgColor
         label.isHidden = false
         label.text = text
         
     }
+
 }

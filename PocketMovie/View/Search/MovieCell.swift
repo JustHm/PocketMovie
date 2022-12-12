@@ -13,6 +13,7 @@ class MovieCell: UICollectionViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         [imageView, titleLabel].forEach {
             addSubview($0)
         }

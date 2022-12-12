@@ -47,7 +47,7 @@ class MovieSearchViewController: UICollectionViewController {
         let selected = searchResult[indexPath.row]
         
         let vc = MovieDetailViewController()
-        vc.configureUI(data: selected)
+        vc.setup(data: selected)
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }

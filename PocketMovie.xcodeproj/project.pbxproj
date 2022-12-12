@@ -68,30 +68,19 @@
 		223397B4293A2D070055621B /* View */ = {
 			isa = PBXGroup;
 			children = (
-				223397B9293B731E0055621B /* Cell */,
-				22502B71292FCCAF00660F91 /* HomeViewController.swift */,
-				223397B02939FBC80055621B /* MovieDetailViewController.swift */,
-				223397B5293A2E320055621B /* MovieSearchViewController.swift */,
+				229BF6D029474EE500E5F928 /* Detail */,
+				229BF6D129474EF800E5F928 /* Home */,
+				229BF6D229474F3F00E5F928 /* Search */,
 			);
 			path = View;
-			sourceTree = "<group>";
-		};
-		223397B9293B731E0055621B /* Cell */ = {
-			isa = PBXGroup;
-			children = (
-				223397AC2937A75D0055621B /* CollectionViewHeader.swift */,
-				223397A4293358B50055621B /* BoxOfficeCell.swift */,
-				223397B7293A3CEC0055621B /* MovieCell.swift */,
-				223397BA293B73440055621B /* ImageCell.swift */,
-				22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */,
-			);
-			path = Cell;
 			sourceTree = "<group>";
 		};
 		22502B48292FCBB000660F91 = {
 			isa = PBXGroup;
 			children = (
 				22CD324E2940C2B800F359A6 /* apiInfo.plist */,
+				22502B56292FCBB000660F91 /* SceneDelegate.swift */,
+				22502B54292FCBB000660F91 /* AppDelegate.swift */,
 				22502B53292FCBB000660F91 /* PocketMovie */,
 				22502B52292FCBB000660F91 /* Products */,
 			);
@@ -110,9 +99,7 @@
 			children = (
 				22502B7B2931192700660F91 /* Service */,
 				22502B752930EB7000660F91 /* Model */,
-				22502B54292FCBB000660F91 /* AppDelegate.swift */,
 				223397B4293A2D070055621B /* View */,
-				22502B56292FCBB000660F91 /* SceneDelegate.swift */,
 				22502B5D292FCBB100660F91 /* Assets.xcassets */,
 				22502B5F292FCBB100660F91 /* LaunchScreen.storyboard */,
 				22502B62292FCBB100660F91 /* Info.plist */,
@@ -136,6 +123,35 @@
 				22502B7E2931199D00660F91 /* APIInfo.swift */,
 			);
 			path = Service;
+			sourceTree = "<group>";
+		};
+		229BF6D029474EE500E5F928 /* Detail */ = {
+			isa = PBXGroup;
+			children = (
+				223397B02939FBC80055621B /* MovieDetailViewController.swift */,
+				223397BA293B73440055621B /* ImageCell.swift */,
+			);
+			path = Detail;
+			sourceTree = "<group>";
+		};
+		229BF6D129474EF800E5F928 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				22502B71292FCCAF00660F91 /* HomeViewController.swift */,
+				223397A4293358B50055621B /* BoxOfficeCell.swift */,
+				22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */,
+				223397AC2937A75D0055621B /* CollectionViewHeader.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		229BF6D229474F3F00E5F928 /* Search */ = {
+			isa = PBXGroup;
+			children = (
+				223397B5293A2E320055621B /* MovieSearchViewController.swift */,
+				223397B7293A3CEC0055621B /* MovieCell.swift */,
+			);
+			path = Search;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

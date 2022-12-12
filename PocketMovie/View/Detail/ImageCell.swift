@@ -13,7 +13,6 @@ class ImageCell: UICollectionViewCell {
         super.layoutSubviews()
         addSubview(imageView)
         imageView.contentMode = .scaleAspectFit
-        //        imageView.sizeToFit()
         imageView.backgroundColor = .black
         imageView.snp.makeConstraints {
             $0.center.equalToSuperview()
@@ -25,9 +24,6 @@ class ImageCell: UICollectionViewCell {
         let url = URL(string: imageURL.replacingOccurrences(of: "http", with: "https"))
         imageView.kf.indicatorType = .activity
         imageView.kf.setImage(with: url, placeholder: nil, options: [
-            .transition(.fade(1.2)),
-            .forceTransition,
-            .scaleFactor(UIScreen.main.scale),
             .cacheOriginalImage
         ])
         

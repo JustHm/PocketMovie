@@ -27,7 +27,7 @@ class HomeViewController: UICollectionViewController {
         navigationController?.navigationBar.backgroundColor = .clear
         navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
         navigationController?.navigationBar.shadowImage = UIImage()
-        //        navigationController?.hidesBarsOnSwipe = true
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "netflix_icon"), style: .plain, target: nil, action: nil) //임시 아이콘
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "folder"), style: .plain, target: nil, action: nil)
         
@@ -45,6 +45,7 @@ class HomeViewController: UICollectionViewController {
         collectionView.register(CollectionViewHeader.self, forSupplementaryViewOfKind: ElementKind.sectionHeader, withReuseIdentifier: "CollectionViewHeader")
         collectionView.register(BoxOfficeBadge.self, forSupplementaryViewOfKind: ElementKind.badge, withReuseIdentifier: "BoxOfficeBadge")
         collectionView.collectionViewLayout = layout()
+//        collectionView.refreshControl =
         
     }
     
@@ -149,12 +150,12 @@ extension HomeViewController {
         case 0:
             let data = dailyList[indexPath.row]
             let poster = getPosterImage(title: data.movieNm)
-            cell.configureCell(imageURL: poster, rank: data.rank)
+            cell.setup(imageURL: poster, rank: data.rank)
             return cell
         case 1:
             let data = weeklyList[indexPath.row]
             let poster = getPosterImage(title: data.movieNm)
-            cell.configureCell(imageURL: poster, rank: data.rank)
+            cell.setup(imageURL: poster, rank: data.rank)
             return cell
         default:
             break
@@ -181,10 +182,10 @@ extension HomeViewController {
             switch indexPath.section {
             case 0:
                 let data = dailyList[indexPath.row]
-                badge.configureBadge(text: data.rankOldAndNew)
+                badge.setup(text: data.rankOldAndNew)
             case 1:
                 let data = weeklyList[indexPath.row]
-                badge.configureBadge(text: data.rankOldAndNew)
+                badge.setup(text: data.rankOldAndNew)
             default:
                 return UICollectionReusableView()
             }
@@ -208,8 +209,7 @@ extension HomeViewController {
         }
         
         let vc = MovieDetailViewController()
-        vc.configureUI(data: boxOfficeInfo[selectedMovie]!)
-        //        vc.configure(imageURL: poster, title: selectedMovie?.movieNm ?? "")
+        vc.setup(data: boxOfficeInfo[selectedMovie]!)
         
         navigationController?.pushViewController(vc, animated: true)
     }
