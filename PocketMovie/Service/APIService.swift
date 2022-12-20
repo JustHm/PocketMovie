@@ -5,10 +5,16 @@
 //  Created by 안정흠 on 2022/11/26.
 //
 import Foundation
+import RxSwift
 import Alamofire
 
 private enum ApiKey: String {
     case kobis, kmdb
+}
+enum NetworkError: Error {
+    case invalidJSON
+    case networkError
+    case unknownError
 }
 
 class APIService {
@@ -29,9 +35,39 @@ class APIService {
         guard let yesterday = Calendar.current.date(byAdding: .day, value: -7, to: date) else { return "20221125" }
         return dateFormatter.string(from: yesterday)
     }
-    
+    func boxOfficeResponseWithRx(range: APIInfo.DateRange) -> Observable<BoxOfficeJSON> {
+        let url = APIInfo.boxOfficeHost + range.rawValue
+        
+        // MARK: Parameter Settings (param: key, targetDt (yyyymmdd) 주간일 경우 weekGb (0))
+        var param: Parameters = ["key": getAPIKey(hostName: .kobis)]
+        switch range {
+        case .daily:
+            param["targetDt"] = dailyDate
+        case .weekly:
+            param["targetDt"] = weeklyDate
+            param["weekGb"] = 0
+        }
+        return Observable<BoxOfficeJSON>.create { observer in
+            let request = AF.request(url, method: .get, parameters: param).responseData{ response in
+                switch response.result {
+                case .success(let data):
+                    do {
+                        let model = try JSONDecoder().decode(BoxOfficeJSON.self, from: data)
+                        observer.onNext(model)
+                    } catch {
+                        observer.onError(NetworkError.invalidJSON)
+                    }
+                case .failure(_):
+                    observer.onError(NetworkError.networkError)
+                    break
+                }
+                
+            }
+            return Disposables.create { request.cancel() }
+        }
+    }
     // MARK: Method
-    func boxOfficeResponse(range: APIInfo.DateRange, completion: @escaping (BoxOffice) -> Void) {
+    func boxOfficeResponse(range: APIInfo.DateRange, completion: @escaping (BoxOfficeJSON) -> Void) {
         let url = APIInfo.boxOfficeHost + range.rawValue
         
         // MARK: Parameter Settings (param: key, targetDt (yyyymmdd) 주간일 경우 weekGb (0))
@@ -51,7 +87,7 @@ class APIService {
                 case let .success(data):
                     do {
                         let decode = JSONDecoder()
-                        let result = try decode.decode(BoxOffice.self, from: data)
+                        let result = try decode.decode(BoxOfficeJSON.self, from: data)
                         completion(result)
                     } catch {
                         print("BOXOFFICE Decode ERROR: \(error.localizedDescription)")
@@ -91,7 +127,7 @@ class APIService {
                 case let .success(data):
                     do {
                         let decode = JSONDecoder()
-                        let temp = try decode.decode(MovieDetail.self, from: data)
+                        let temp = try decode.decode(MovieDetailJSON.self, from: data)
                         if temp.data[0].result != nil {
                             completion(temp.data[0])
                         } else {

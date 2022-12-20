@@ -1,5 +1,5 @@
 //
-//  MovieDetail.swift
+//  MovieDetailJSON.swift
 //  PocketMovie
 //
 //  Created by 안정흠 on 2022/12/01.
@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Root
-struct MovieDetail: Codable {
+struct MovieDetailJSON: Codable {
     let data: [Movies] // 배열로 되어있는 의미를 모르겠음 걍 하나임
     
     enum CodingKeys: String, CodingKey {

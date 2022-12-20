@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 import SwiftUI
 
 struct ElementKind {
@@ -16,6 +18,8 @@ struct ElementKind {
 }
 
 class HomeViewController: UICollectionViewController {
+    let disposeBag = DisposeBag()
+    
     var dailyList: [MovieInfo] = []
     var weeklyList: [MovieInfo] = []
     var boxOfficeInfo: [String: Movie] = [:]
@@ -40,13 +44,45 @@ class HomeViewController: UICollectionViewController {
         self.navigationItem.searchController = searchController
         
         getRankData()
+        rxResponse()
         
         collectionView.register(BoxOfficeCell.self, forCellWithReuseIdentifier: "BoxOfficeCell")
         collectionView.register(CollectionViewHeader.self, forSupplementaryViewOfKind: ElementKind.sectionHeader, withReuseIdentifier: "CollectionViewHeader")
         collectionView.register(BoxOfficeBadge.self, forSupplementaryViewOfKind: ElementKind.badge, withReuseIdentifier: "BoxOfficeBadge")
         collectionView.collectionViewLayout = layout()
-//        collectionView.refreshControl =
+        //        collectionView.refreshControl =
         
+    }
+    private func rxResponse() {
+        let weeklyData = PublishSubject<[MovieInfo]>()
+        let dailyData = PublishSubject<[MovieInfo]>()
+        APIService.shared.boxOfficeResponseWithRx(range: .daily)
+            .compactMap{ response in
+                if let temp = response.boxOfficeResult.dailyBoxOfficeList {
+                    return temp
+                }
+                return nil
+            }
+            .bind(to: dailyData)
+            .disposed(by: disposeBag)
+        APIService.shared.boxOfficeResponseWithRx(range: .weekly)
+            .compactMap{ response in
+                if let temp = response.boxOfficeResult.weeklyBoxOfficeList {
+                    return temp
+                }
+                return nil
+            }
+            .bind(to: weeklyData)
+            .disposed(by: disposeBag)
+        
+        let cellData: Driver<[MovieInfo]>
+        cellData = dailyData.asDriver(onErrorJustReturn: [])
+        cellData
+            .drive(collectionView.rx.items(cellIdentifier: "BoxOfficeCell", cellType: BoxOfficeCell.self)) { index, data, cell in
+                
+            
+        }
+        print("HERE: \(cellData)")
     }
     
     private func getRankData() {
@@ -89,7 +125,7 @@ class HomeViewController: UICollectionViewController {
         return posters[0]
     }
 }
-
+// MARK: CompositionalLayout Settings
 extension HomeViewController {
     private func layout() -> UICollectionViewCompositionalLayout {
         return UICollectionViewCompositionalLayout(section: boxOfficeSection())
