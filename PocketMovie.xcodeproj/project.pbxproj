@@ -25,6 +25,9 @@
 		22502B742930D98200660F91 /* BoxOffice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B732930D98200660F91 /* BoxOffice.swift */; };
 		22502B7D2931193500660F91 /* APIService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B7C2931193500660F91 /* APIService.swift */; };
 		22502B7F2931199D00660F91 /* APIInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22502B7E2931199D00660F91 /* APIInfo.swift */; };
+		22C96648295180ED002C0819 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 22C96647295180ED002C0819 /* RxCocoa */; };
+		22C9664A295180ED002C0819 /* RxRelay in Frameworks */ = {isa = PBXBuildFile; productRef = 22C96649295180ED002C0819 /* RxRelay */; };
+		22C9664C295180ED002C0819 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C9664B295180ED002C0819 /* RxSwift */; };
 		22CD324D293F5FC000F359A6 /* BoxOfficeBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */; };
 		22CD324F2940C2B800F359A6 /* apiInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22CD324E2940C2B800F359A6 /* apiInfo.plist */; };
 /* End PBXBuildFile section */
@@ -56,8 +59,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22C9664C295180ED002C0819 /* RxSwift in Frameworks */,
+				22C9664A295180ED002C0819 /* RxRelay in Frameworks */,
 				22502B70292FCC4100660F91 /* Kingfisher in Frameworks */,
 				22502B6A292FCC2300660F91 /* Alamofire in Frameworks */,
+				22C96648295180ED002C0819 /* RxCocoa in Frameworks */,
 				22502B6D292FCC3200660F91 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -174,6 +180,9 @@
 				22502B69292FCC2300660F91 /* Alamofire */,
 				22502B6C292FCC3200660F91 /* SnapKit */,
 				22502B6F292FCC4100660F91 /* Kingfisher */,
+				22C96647295180ED002C0819 /* RxCocoa */,
+				22C96649295180ED002C0819 /* RxRelay */,
+				22C9664B295180ED002C0819 /* RxSwift */,
 			);
 			productName = PocketMovie;
 			productReference = 22502B51292FCBB000660F91 /* PocketMovie.app */;
@@ -207,6 +216,7 @@
 				22502B68292FCC2300660F91 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				22502B6B292FCC3200660F91 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				22502B6E292FCC4100660F91 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				22C96646295180ED002C0819 /* XCRemoteSwiftPackageReference "RxSwift" */,
 			);
 			productRefGroup = 22502B52292FCBB000660F91 /* Products */;
 			projectDirPath = "";
@@ -484,6 +494,14 @@
 				minimumVersion = 7.0.0;
 			};
 		};
+		22C96646295180ED002C0819 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -501,6 +519,21 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 22502B6E292FCC4100660F91 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
+		};
+		22C96647295180ED002C0819 /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C96646295180ED002C0819 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+		22C96649295180ED002C0819 /* RxRelay */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C96646295180ED002C0819 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxRelay;
+		};
+		22C9664B295180ED002C0819 /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C96646295180ED002C0819 /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
