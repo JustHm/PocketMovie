@@ -43,81 +43,49 @@ class HomeViewController: UICollectionViewController {
         searchController.searchBar.delegate = vc.self
         self.navigationItem.searchController = searchController
         
-        getRankData()
-        rxResponse()
+        
         
         collectionView.register(BoxOfficeCell.self, forCellWithReuseIdentifier: "BoxOfficeCell")
         collectionView.register(CollectionViewHeader.self, forSupplementaryViewOfKind: ElementKind.sectionHeader, withReuseIdentifier: "CollectionViewHeader")
         collectionView.register(BoxOfficeBadge.self, forSupplementaryViewOfKind: ElementKind.badge, withReuseIdentifier: "BoxOfficeBadge")
-        collectionView.collectionViewLayout = layout()
-        //        collectionView.refreshControl =
+        collectionView.collectionViewLayout = BoxOfficeCompositionalLayout().layout()
         
+        getDataAsync()
     }
-    private func rxResponse() {
-        let weeklyData = PublishSubject<[MovieInfo]>()
-        let dailyData = PublishSubject<[MovieInfo]>()
-        APIService.shared.boxOfficeResponseWithRx(range: .daily)
-            .compactMap{ response in
-                if let temp = response.boxOfficeResult.dailyBoxOfficeList {
-                    return temp
-                }
-                return nil
+    private func getDataAsync() {
+        Task {
+            do {
+                async let daily = APIManager().searchBoxOfficeInfo(dateRange: .daily)
+                async let weekly = APIManager().searchBoxOfficeInfo(dateRange: .weekly)
+                let movies = try await [daily, weekly]
+                //BoxOffice 일간 주간 리스트
+                dailyList = movies[0]
+                weeklyList = movies[1]
+                //boxOfficeInfo에서 영화이름을 Key로 포스터를 가져오거나 상세 정보를 표시.
+                boxOfficeInfo = try await loadMovieDetail(movies: dailyList + weeklyList)
+                collectionView.reloadData()
+            } catch {
+                fatalError(error.localizedDescription)
             }
-            .bind(to: dailyData)
-            .disposed(by: disposeBag)
-        APIService.shared.boxOfficeResponseWithRx(range: .weekly)
-            .compactMap{ response in
-                if let temp = response.boxOfficeResult.weeklyBoxOfficeList {
-                    return temp
+        }
+    }
+    private func loadMovieDetail(movies: [MovieInfo]) async throws -> [String: Movie] {
+        var temp: [String: Movie] = [:]
+        try await withThrowingTaskGroup(of: (String, Movie?).self) { group in
+            for movie in (dailyList + weeklyList) {
+                group.addTask {
+                    return try await (movie.movieNm,
+                                      APIManager().searchMovieInfo(title: movie.movieNm, releaseDate: nil))
                 }
-                return nil
             }
-            .bind(to: weeklyData)
-            .disposed(by: disposeBag)
-        
-        let cellData: Driver<[MovieInfo]>
-        cellData = dailyData.asDriver(onErrorJustReturn: [])
-        cellData
-            .drive(collectionView.rx.items(cellIdentifier: "BoxOfficeCell", cellType: BoxOfficeCell.self)) { index, data, cell in
-                
-            
+            for try await (name, movie) in group {
+                guard let movie else { continue }
+                temp[name] = movie
+            }
         }
-        print("HERE: \(cellData)")
+        return temp
     }
-    
-    private func getRankData() {
-        APIService.shared.boxOfficeResponse(range: .daily, completion: { [weak self] response in
-            guard let data = response.boxOfficeResult.dailyBoxOfficeList else {return}
-            self?.dailyList = data
-            self?.getMovieInfo()
-        })
-        APIService.shared.boxOfficeResponse(range: .weekly, completion: {[weak self] response in
-            guard let data = response.boxOfficeResult.weeklyBoxOfficeList else {return}
-            self?.weeklyList = data
-            self?.getMovieInfo()
-        })
-    }
-    
-    private func getMovieInfo() {
-        for (_, value) in dailyList.enumerated() {
-            requsetMovieInfo(value: value)
-        }
-        for (_, value) in weeklyList.enumerated() {
-            requsetMovieInfo(value: value)
-        }
-    }
-    private func requsetMovieInfo(value: MovieInfo) {
-        guard boxOfficeInfo[value.movieNm] != nil else {
-            APIService.shared.searchMovie(title: value.movieNm, releaseDate: value.openDt, startCount: 0, completion: { [weak self] response in
-                if let temp = response.result {
-                    self?.boxOfficeInfo[value.movieNm] = temp[0]
-                    self?.collectionView.reloadData()
-                }
-            })
-            return
-        }
-    }
-    private func getPosterImage(title: String) -> String {
+    func getPosterImage(title: String) -> String {
         guard let temp = boxOfficeInfo[title] else {
             return ""
         }
@@ -125,131 +93,6 @@ class HomeViewController: UICollectionViewController {
         return posters[0]
     }
 }
-// MARK: CompositionalLayout Settings
-extension HomeViewController {
-    private func layout() -> UICollectionViewCompositionalLayout {
-        return UICollectionViewCompositionalLayout(section: boxOfficeSection())
-    }
-    
-    private func boxOfficeSection() -> NSCollectionLayoutSection {
-        // layout
-        let layoutSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.3), heightDimension: .fractionalHeight(0.8))
-        let item = NSCollectionLayoutItem(layoutSize: layoutSize,supplementaryItems: [createGroupBadge()])
-        item.contentInsets = NSDirectionalEdgeInsets(top: 10, leading: 5, bottom: 0, trailing: 5)
-        // group
-        let groupSize = NSCollectionLayoutSize(widthDimension: .estimated(500), heightDimension: .estimated(200))
-        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-        // section
-        let section = NSCollectionLayoutSection(group: group)
-        section.orthogonalScrollingBehavior = .continuous
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 5, bottom: 15, trailing: 5)
-        let sectionHeader = createSectionHeader()
-        section.boundarySupplementaryItems = [sectionHeader]
-        return section
-    }
-    // create badge
-    private func createGroupBadge() -> NSCollectionLayoutSupplementaryItem {
-        let layoutSize = NSCollectionLayoutSize(widthDimension: .estimated(24), heightDimension: .estimated(24))
-        let anchor = NSCollectionLayoutAnchor(edges: [.top, .trailing], fractionalOffset: CGPoint(x: 0, y: -1))
-        let badge = NSCollectionLayoutSupplementaryItem(layoutSize: layoutSize, elementKind: ElementKind.badge, containerAnchor: anchor)
-        return badge
-    }
-    // sectionHeader Layout settings
-    private func createSectionHeader() -> NSCollectionLayoutBoundarySupplementaryItem {
-        //Section Header Size
-        let layoutSectionHeaderSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(30))
-        // Section Header Layout
-        let sectionHeader = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: layoutSectionHeaderSize, elementKind: ElementKind.sectionHeader, alignment: .top)
-        
-        return sectionHeader
-    }
-}
-// MARK: UICollectionViewDataSource
-extension HomeViewController {
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
-    }
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        switch section {
-        case 0: // daily
-            return dailyList.count
-        case 1:
-            return weeklyList.count
-        default:
-            return 0
-        }
-    }
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "BoxOfficeCell", for: indexPath) as? BoxOfficeCell else { return UICollectionViewCell() }
-        switch indexPath.section {
-        case 0:
-            let data = dailyList[indexPath.row]
-            let poster = getPosterImage(title: data.movieNm)
-            cell.setup(imageURL: poster, rank: data.rank)
-            return cell
-        case 1:
-            let data = weeklyList[indexPath.row]
-            let poster = getPosterImage(title: data.movieNm)
-            cell.setup(imageURL: poster, rank: data.rank)
-            return cell
-        default:
-            break
-        }
-        return UICollectionViewCell()
-    }
-    
-    override func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        if kind == ElementKind.sectionHeader {
-            guard let headerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "CollectionViewHeader", for: indexPath) as? CollectionViewHeader else { return UICollectionReusableView() }
-            switch indexPath.section {
-            case 0:
-                headerView.headerLabel.text = "일간 박스 오피스 순위"
-            case 1:
-                headerView.headerLabel.text = "주간 박스 오피스 순위"
-            default:
-                return UICollectionReusableView()
-            }
-            return headerView
-        }
-        else if kind == ElementKind.badge {
-            guard let badge = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "BoxOfficeBadge", for: indexPath) as? BoxOfficeBadge else { return UICollectionReusableView() }
-            
-            switch indexPath.section {
-            case 0:
-                let data = dailyList[indexPath.row]
-                badge.setup(text: data.rankOldAndNew)
-            case 1:
-                let data = weeklyList[indexPath.row]
-                badge.setup(text: data.rankOldAndNew)
-            default:
-                return UICollectionReusableView()
-            }
-            return badge
-        }
-        else {
-            return UICollectionReusableView()
-        }
-    }
-    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        var selectedMovie = ""
-        
-        switch indexPath.section {
-        case 0:
-            selectedMovie = dailyList[indexPath.row].movieNm
-        case 1:
-            selectedMovie = weeklyList[indexPath.row].movieNm
-        default:
-            return
-        }
-        
-        let vc = MovieDetailViewController()
-        vc.setup(data: boxOfficeInfo[selectedMovie]!)
-        
-        navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
 
 // SwiftUI Preview Provider
 struct ViewController_Preview: PreviewProvider {

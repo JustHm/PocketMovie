@@ -69,26 +69,23 @@ extension MovieSearchViewController: UISearchBarDelegate {
         searchResult.removeAll()
         fetchMovie(text: text)
     }
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("ClickCancelButton")
+    }
+    
     private func fetchMovie(text: String) {
-        APIService.shared.searchMovie(title: text, releaseDate: nil, startCount: searchResult.count, completion: { [weak self] response in
-            if response.result == nil, (self?.searchResult.isEmpty ?? true) {
-                self?.discriptionLabel.isHidden = false
-                self?.searchResult = []
-                return
+        Task {
+            do {
+                let list = try await APIManager().searchMovieList(title: text, releaseDate: nil)
+                if let temp = list.result {
+                    searchResult = temp
+                    collectionView.reloadData()
+                }
+            } catch {
+                print(error.localizedDescription)
             }
-            if let temp = response.result, !temp.isEmpty {
-                self?.discriptionLabel.isHidden = true
-                self?.searchResult.append(contentsOf: temp)
-                self?.collectionView.reloadData()
-                // 생성되어 있는 cell과 대응되지 않아 오류가 뜨고 걍 reeloadData로 실행된다..
-                // 그래도 아래 방법으로 하면 데이터를 더 가져올때 깜빡이는 현상은 사라진다.
-                //                let startIndex = (self?.searchResult.count)!
-                //                let indexPath: [IndexPath] = (startIndex..<(startIndex + temp.count)).map {
-                //                    return [0, $0]
-                //                }
-                //                self?.collectionView.reloadItems(at: indexPath)
-            }
-        })
+            
+        }
     }
 }
 

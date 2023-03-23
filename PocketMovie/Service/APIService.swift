@@ -20,68 +20,90 @@ enum NetworkError: Error {
 class APIService {
     // MARK: Property
     static let shared = APIService()
-    private var dateFormatter: DateFormatter {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YYYYMMdd"
-        return dateFormatter
-    }
-    private var dailyDate: String { // 어제 날짜로 설정해야함
-        let date = Date()
-        guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: date) else { return "20221125" }
-        return dateFormatter.string(from: yesterday)
-    }
-    private var weeklyDate: String { // 저번주 날짜로 설정해야함.
-        let date = Date()
-        guard let yesterday = Calendar.current.date(byAdding: .day, value: -7, to: date) else { return "20221125" }
-        return dateFormatter.string(from: yesterday)
-    }
-    func boxOfficeResponseWithRx(range: APIInfo.DateRange) -> Observable<BoxOfficeJSON> {
-        let url = APIInfo.boxOfficeHost + range.rawValue
-        
-        // MARK: Parameter Settings (param: key, targetDt (yyyymmdd) 주간일 경우 weekGb (0))
-        var param: Parameters = ["key": getAPIKey(hostName: .kobis)]
-        switch range {
-        case .daily:
-            param["targetDt"] = dailyDate
-        case .weekly:
-            param["targetDt"] = weeklyDate
-            param["weekGb"] = 0
+    
+    // MARK: Util
+    private func getAPIKey(hostName: ApiKey) -> String {
+        guard let path = Bundle.main.path(forResource: "apiInfo", ofType: "plist"),
+              let data = FileManager.default.contents(atPath: path),
+              let result = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String:String] else {
+            return ""
         }
-        return Observable<BoxOfficeJSON>.create { observer in
-            let request = AF.request(url, method: .get, parameters: param).responseData{ response in
-                switch response.result {
-                case .success(let data):
-                    do {
-                        let model = try JSONDecoder().decode(BoxOfficeJSON.self, from: data)
-                        observer.onNext(model)
-                    } catch {
-                        observer.onError(NetworkError.invalidJSON)
-                    }
-                case .failure(_):
-                    observer.onError(NetworkError.networkError)
-                    break
-                }
-                
+        switch hostName {
+        case .kobis:
+            return result["kobisKey"] ?? ""
+        case .kmdb:
+            return result["kmdbKey"] ?? ""
+        }
+    }
+}
+// MARK: User Swift Concurrency (Async/await)
+extension APIService {
+    ///BoxOffice 일간, 주간 정보 모두 반환
+    func searchBoxOfficeInfo(dateRange: DateRange) async throws -> [MovieInfo] {
+        let url = APIInfo.boxOfficeHost + dateRange.rawValue
+        var dataTask: DataTask<BoxOfficeJSON>
+        switch dateRange {
+        case .daily:
+            let param = BoxOfficeRequestModel(key: getAPIKey(hostName: .kobis), targetDt: Date().dailyDate)
+            dataTask = AF.request(url, method: .get, parameters: param).serializingDecodable(BoxOfficeJSON.self)
+        case .weekly:
+            let param = BoxOfficeRequestModel(key: getAPIKey(hostName: .kobis), targetDt: Date().weeklyDate)
+            dataTask = AF.request(url, method: .get, parameters: param).serializingDecodable(BoxOfficeJSON.self)
+        }
+        
+        switch await dataTask.result {
+        case .success(let data):
+            return dateRange == .daily ? data.boxOfficeResult.dailyBoxOfficeList! : data.boxOfficeResult.weeklyBoxOfficeList!
+        case .failure(let error):
+            print(error.localizedDescription)
+            throw error
+        }
+    }
+    func searchMovieInfo(title: String, releaseDate: String?) async throws -> Movie? {
+        let url = APIInfo.movieDetailHost
+        var date: String {
+            if let temp = releaseDate {
+                return temp.replacingOccurrences(of: "-", with: "")
             }
-            return Disposables.create { request.cancel() }
+            else {
+                return ""
+            }
+        }
+        // Parameter Settings
+        let param: Parameters = ["ServiceKey": getAPIKey(hostName: .kmdb),
+            "collection": "kmdb_new2",
+            "detail": "Y",
+            "title": title,
+            "releaseDts": date
+//            "startCount": startCount
+        ]
+        let dataTask = AF.request(url, method: .get, parameters: param).serializingDecodable(MovieDetailJSON.self)
+        switch await dataTask.result {
+        case .success(let data):
+            guard let data = data.data[0].result else {
+                print("가져오기 실패 \(title) : \(data.data)")
+                return nil
+            }
+            return data[0]
+        case .failure(let error):
+            throw error
         }
     }
-    // MARK: Method
-    func boxOfficeResponse(range: APIInfo.DateRange, completion: @escaping (BoxOfficeJSON) -> Void) {
+}
+// MARK: Use Alamofire + escaping closure
+extension APIService {
+    func boxOfficeResponse(range: DateRange, completion: @escaping (BoxOfficeJSON) -> Void) {
         let url = APIInfo.boxOfficeHost + range.rawValue
-        
-        // MARK: Parameter Settings (param: key, targetDt (yyyymmdd) 주간일 경우 weekGb (0))
-        var param: Parameters = ["key": getAPIKey(hostName: .kobis)]
+        // Parameter Settings (param: key, targetDt (yyyymmdd) 주간일 경우 weekGb (0))
+        var parameter: BoxOfficeRequestModel
         switch range {
         case .daily:
-            param["targetDt"] = dailyDate
+            parameter = BoxOfficeRequestModel(key: getAPIKey(hostName: .kobis), targetDt: Date().dailyDate)
         case .weekly:
-            param["targetDt"] = weeklyDate
-            param["weekGb"] = 0
+            parameter = BoxOfficeRequestModel(key: getAPIKey(hostName: .kobis), targetDt: Date().weeklyDate)
         }
-        
-        // MARK: Request Part
-        AF.request(url, method: .get, parameters: param)
+        // Request Part
+        AF.request(url, method: .get, parameters: parameter)
             .responseData(completionHandler: { response in
                 switch response.result {
                 case let .success(data):
@@ -111,7 +133,7 @@ class APIService {
                 return ""
             }
         }
-        // MARK: Parameter Settings
+        // Parameter Settings
         let param: Parameters = [
             "ServiceKey": getAPIKey(hostName: .kmdb),
             "collection": "kmdb_new2",
@@ -144,22 +166,39 @@ class APIService {
                 }
             })
     }
+    
 }
-
+// MARK: Rx Example
 extension APIService {
-    // MARK: Util
-    private func getAPIKey(hostName: ApiKey) -> String {
-        guard let path = Bundle.main.path(forResource: "apiInfo", ofType: "plist"),
-              let data = FileManager.default.contents(atPath: path),
-              let result = try? PropertyListSerialization.propertyList(from: data, format: nil) as? [String:String] else {
-            return ""
-        }
-        switch hostName {
-        case .kobis:
-            return result["kobisKey"] ?? ""
-        case .kmdb:
-            return result["kmdbKey"] ?? ""
-        }
+    func boxOfficeResponseWithRx(range: DateRange) -> Single<Result<BoxOfficeJSON, NetworkError>> {
+        let url = APIInfo.boxOfficeHost + range.rawValue
         
+        // MARK: Parameter Settings (param: key, targetDt (yyyymmdd) 주간일 경우 weekGb (0))
+        var param: Parameters = ["key": getAPIKey(hostName: .kobis)]
+        switch range {
+        case .daily:
+            param["targetDt"] = Date().dailyDate
+        case .weekly:
+            param["targetDt"] = Date().weeklyDate
+            param["weekGb"] = 0
+        }
+        return Observable.create { observer in
+            let request = AF.request(url, method: .get, parameters: param).responseData{ response in
+                switch response.result {
+                case .success(let data):
+                    do {
+                        let model = try JSONDecoder().decode(BoxOfficeJSON.self, from: data)
+                        // 여기다 이미지 가져오는걸 만들까?
+                        observer.onNext(.success(model))
+                    } catch {
+                        observer.onNext(.failure(NetworkError.invalidJSON))
+                    }
+                case .failure(_):
+                    observer.onNext(.failure(NetworkError.networkError))
+                    break
+                }
+            }
+            return Disposables.create { request.cancel() }
+        }.asSingle()
     }
 }

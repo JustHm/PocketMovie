@@ -9,19 +9,19 @@ import Foundation
 // Weekly, Daily BoxOffice Model
 
 // MARK: - BoxOffice
-struct BoxOfficeJSON: Decodable {
+struct BoxOfficeJSON: Codable {
     var boxOfficeResult: BoxOfficeResult
 }
 
 // MARK: - BoxOfficeResult
-struct BoxOfficeResult: Decodable {
+struct BoxOfficeResult: Codable {
     let boxofficeType, showRange: String
     let yearWeekTime: String?
     var weeklyBoxOfficeList: [MovieInfo]?
     var dailyBoxOfficeList: [MovieInfo]?
 }
 
-struct MovieInfo: Decodable {
+struct MovieInfo: Codable {
     let rank: String
     let rankOldAndNew: String
     let movieCd: String

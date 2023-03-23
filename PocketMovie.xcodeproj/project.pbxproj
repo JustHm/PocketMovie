@@ -30,6 +30,11 @@
 		22C9664C295180ED002C0819 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C9664B295180ED002C0819 /* RxSwift */; };
 		22CD324D293F5FC000F359A6 /* BoxOfficeBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */; };
 		22CD324F2940C2B800F359A6 /* apiInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 22CD324E2940C2B800F359A6 /* apiInfo.plist */; };
+		22F082962992302E007B4AAD /* BoxOfficeCompositionalLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F082952992302E007B4AAD /* BoxOfficeCompositionalLayout.swift */; };
+		22F15B6229CC5914003A4192 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F15B6129CC5914003A4192 /* Date+.swift */; };
+		22F15B6429CC5B04003A4192 /* BoxOfficeRequestModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F15B6329CC5B04003A4192 /* BoxOfficeRequestModel.swift */; };
+		22F15B6629CC6BEE003A4192 /* HomeViewController+DataSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F15B6529CC6BEE003A4192 /* HomeViewController+DataSource.swift */; };
+		22F15B6829CC7825003A4192 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F15B6729CC7825003A4192 /* APIManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +57,11 @@
 		22502B7E2931199D00660F91 /* APIInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIInfo.swift; sourceTree = "<group>"; };
 		22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeBadge.swift; sourceTree = "<group>"; };
 		22CD324E2940C2B800F359A6 /* apiInfo.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = apiInfo.plist; sourceTree = "<group>"; };
+		22F082952992302E007B4AAD /* BoxOfficeCompositionalLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeCompositionalLayout.swift; sourceTree = "<group>"; };
+		22F15B6129CC5914003A4192 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
+		22F15B6329CC5B04003A4192 /* BoxOfficeRequestModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoxOfficeRequestModel.swift; sourceTree = "<group>"; };
+		22F15B6529CC6BEE003A4192 /* HomeViewController+DataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "HomeViewController+DataSource.swift"; sourceTree = "<group>"; };
+		22F15B6729CC7825003A4192 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +97,7 @@
 				22CD324E2940C2B800F359A6 /* apiInfo.plist */,
 				22502B56292FCBB000660F91 /* SceneDelegate.swift */,
 				22502B54292FCBB000660F91 /* AppDelegate.swift */,
+				22F15B6129CC5914003A4192 /* Date+.swift */,
 				22502B53292FCBB000660F91 /* PocketMovie */,
 				22502B52292FCBB000660F91 /* Products */,
 			);
@@ -125,8 +136,10 @@
 		22502B7B2931192700660F91 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				22F15B6329CC5B04003A4192 /* BoxOfficeRequestModel.swift */,
 				22502B7C2931193500660F91 /* APIService.swift */,
 				22502B7E2931199D00660F91 /* APIInfo.swift */,
+				22F15B6729CC7825003A4192 /* APIManager.swift */,
 			);
 			path = Service;
 			sourceTree = "<group>";
@@ -144,9 +157,8 @@
 			isa = PBXGroup;
 			children = (
 				22502B71292FCCAF00660F91 /* HomeViewController.swift */,
-				223397A4293358B50055621B /* BoxOfficeCell.swift */,
-				22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */,
-				223397AC2937A75D0055621B /* CollectionViewHeader.swift */,
+				22F15B6529CC6BEE003A4192 /* HomeViewController+DataSource.swift */,
+				22F0829429922F29007B4AAD /* HomeCollectionView */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -158,6 +170,17 @@
 				223397B7293A3CEC0055621B /* MovieCell.swift */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		22F0829429922F29007B4AAD /* HomeCollectionView */ = {
+			isa = PBXGroup;
+			children = (
+				223397A4293358B50055621B /* BoxOfficeCell.swift */,
+				22CD324C293F5FC000F359A6 /* BoxOfficeBadge.swift */,
+				223397AC2937A75D0055621B /* CollectionViewHeader.swift */,
+				22F082952992302E007B4AAD /* BoxOfficeCompositionalLayout.swift */,
+			);
+			path = HomeCollectionView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -245,20 +268,25 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22F15B6429CC5B04003A4192 /* BoxOfficeRequestModel.swift in Sources */,
 				223397B8293A3CEC0055621B /* MovieCell.swift in Sources */,
 				22502B55292FCBB000660F91 /* AppDelegate.swift in Sources */,
 				223397AD2937A75D0055621B /* CollectionViewHeader.swift in Sources */,
 				22502B57292FCBB000660F91 /* SceneDelegate.swift in Sources */,
+				22F15B6829CC7825003A4192 /* APIManager.swift in Sources */,
 				223397BB293B73440055621B /* ImageCell.swift in Sources */,
 				223397A5293358B50055621B /* BoxOfficeCell.swift in Sources */,
+				22F15B6629CC6BEE003A4192 /* HomeViewController+DataSource.swift in Sources */,
 				223397B6293A2E320055621B /* MovieSearchViewController.swift in Sources */,
 				22CD324D293F5FC000F359A6 /* BoxOfficeBadge.swift in Sources */,
+				22F15B6229CC5914003A4192 /* Date+.swift in Sources */,
 				22502B72292FCCAF00660F91 /* HomeViewController.swift in Sources */,
 				22502B7D2931193500660F91 /* APIService.swift in Sources */,
 				223397AF2938A26E0055621B /* MovieDetailJSON.swift in Sources */,
 				22502B742930D98200660F91 /* BoxOfficeJSON.swift in Sources */,
 				223397B12939FBC80055621B /* MovieDetailViewController.swift in Sources */,
 				22502B7F2931199D00660F91 /* APIInfo.swift in Sources */,
+				22F082962992302E007B4AAD /* BoxOfficeCompositionalLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
